@@ -1,32 +1,36 @@
-/* Reuse the answer's YuanHei titles, neutral surfaces and numbered headings. */
+/* Part 2: full-width previews and clear experience/source entry points. */
 #part2 .section-title{font-size:38px;letter-spacing:-.9px}
 #part2 .section-lead{max-width:none}
 #part2 .interaction-entry-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:0 0 48px}
 #part2 .interaction-entry{display:flex;flex-direction:column;min-width:0;min-height:186px;padding:28px 30px;border-radius:14px;background:#fff;color:#18191c;box-shadow:var(--card-shadow);transition:background .2s ease,box-shadow .2s ease}
 #part2 .interaction-entry:hover{opacity:1;background:#fafafa;box-shadow:0 10px 28px rgb(0 0 0 / .09)}
 #part2 .interaction-entry:focus-visible{outline:2px solid #1034ce;outline-offset:5px}
-#part2 .interaction-entry-primary{background:#18191c;color:#fff}
-#part2 .interaction-entry-primary:hover{background:#28282c}
-#part2 .interaction-entry-meta{display:flex;align-items:baseline;gap:13px;font:11px/1.6 system-ui,sans-serif;color:#686868}
-#part2 .interaction-entry-meta>span:first-child{font-family:var(--title);font-size:14px;color:#1034ce}
-#part2 .interaction-entry-title{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:22px 0 14px;font:30px/1.4 var(--title);letter-spacing:-.5px}
+#part2 .interaction-entry-primary{background:#1034ce;color:#fff}
+#part2 .interaction-entry-primary:hover{background:#0d2dbb}
+#part2 .interaction-entry-title{display:flex;align-items:center;justify-content:space-between;gap:20px;margin:0 0 18px;font:30px/1.4 var(--title);letter-spacing:-.5px}
 #part2 .interaction-entry-arrow{font:29px/1 system-ui,sans-serif;flex:none}
 #part2 .interaction-entry-note{margin-top:auto;font:12px/1.8 system-ui,sans-serif;color:#686868}
-#part2 .interaction-entry-primary .interaction-entry-meta,#part2 .interaction-entry-primary .interaction-entry-meta>span:first-child,#part2 .interaction-entry-primary .interaction-entry-note{color:#c5c5ca}
+#part2 .interaction-entry-primary .interaction-entry-note{color:#fff}
+#part2 .interaction-entry-source{background:#ff4d00;color:#25130b}
+#part2 .interaction-entry-source:hover{background:#f24700}
+#part2 .interaction-entry-source .interaction-entry-note{color:#25130b}
 #part2 .interaction-review{box-shadow:var(--card-shadow)}
 #part2 .interaction-review .interaction-prompt-label{margin:24px 0 10px;font-size:12px;color:#686868}
 #part2 .interaction-review blockquote{margin:0;padding:0 0 0 18px;border-left:2px solid #1034ce;font:14px/1.95 system-ui,sans-serif;color:#252525;overflow-wrap:anywhere}
 @media(max-width:900px){#part2 .interaction-entry{padding:24px;min-height:178px}#part2 .interaction-entry-title{font-size:26px}}
-@media(max-width:650px){#part2 .section-title{font-size:31px}#part2 .interaction-entry-grid{grid-template-columns:1fr;gap:14px;margin-bottom:38px}#part2 .interaction-entry{min-height:160px;padding:23px 24px}#part2 .interaction-entry-title{margin:16px 0 10px}#part2 .interaction-review blockquote{font-size:13px;padding-left:15px}}
+@media(max-width:650px){#part2 .section-title{font-size:31px}#part2 .interaction-entry-grid{grid-template-columns:1fr;gap:14px;margin-bottom:38px}#part2 .interaction-entry{min-height:160px;padding:23px 24px}#part2 .interaction-entry-title{margin:0 0 14px}#part2 .interaction-review blockquote{font-size:13px;padding-left:15px}}
 @media(prefers-reduced-motion:reduce){#part2 .interaction-entry{transition:none}}
 
+#part2>[data-effect-previews]{display:block;width:100%;max-width:none;min-width:0}
 #part2 .effect-preview-heading{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 #part2 .effect-preview-heading h3{margin-bottom:0}
 #part2 .effect-preview-group{width:100%;max-width:none;margin:35px 0 42px}
-#part2 .effect-preview-group h4{display:flex;align-items:baseline;gap:13px;margin:0 0 18px;font:23px/1.5 var(--title);color:#18191c}
+#part2 .effect-preview-group-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:8px 22px;margin:0 0 18px}
+#part2 .effect-preview-description{flex:1 1 300px;min-width:0;margin:0;font:13px/1.9 system-ui,sans-serif;color:#686868}
+#part2 .effect-preview-group h4{display:flex;align-items:baseline;gap:13px;flex:none;margin:0;font:23px/1.5 var(--title);color:#18191c}
 #part2 .effect-preview-group h4>span{font-size:15px;color:#1034ce}
-#part2 .effect-preview-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
-#part2 .effect-preview-card{min-width:0;margin:0;background:transparent;border-radius:0;overflow:visible;box-shadow:none}
+#part2 .effect-preview-grid{display:grid;width:100%;max-width:none;justify-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+#part2 .effect-preview-card{width:100%;max-width:none;min-width:0;margin:0;background:transparent;border-radius:0;overflow:visible;box-shadow:none}
 #part2 .effect-preview-stage{position:relative;aspect-ratio:4/3;background:#0b0c10;overflow:hidden;border-radius:12px}
 #part2 .effect-preview-stage img,#part2 .effect-preview-stage canvas{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 #part2 .effect-preview-stage canvas{opacity:0}
@@ -34,7 +38,7 @@
 #part2 .has-animation img{visibility:hidden}
 #part2 .effect-preview-card figcaption{display:block;padding:3px 0 0;text-align:center;color:#555;font:13px/1.6 system-ui,sans-serif}
 #part2 .effect-preview-retry{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);min-height:44px;padding:10px 16px;background:#ffffffed;color:#18191c;border-radius:8px;font:12px/1.5 system-ui,sans-serif;white-space:nowrap}
-@media(max-width:650px){#part2 .effect-preview-group{margin:28px 0 34px}#part2 .effect-preview-group h4{font-size:21px;margin-bottom:14px}#part2 .effect-preview-grid{gap:12px}#part2 .effect-preview-stage{border-radius:9px}#part2 .effect-preview-card figcaption{font-size:12px}}
+@media(max-width:650px){#part2 .effect-preview-group{margin:28px 0 34px}#part2 .effect-preview-group-heading{gap:7px;margin-bottom:14px}#part2 .effect-preview-description{flex-basis:100%;font-size:12px}#part2 .effect-preview-group h4{font-size:21px;margin:0}#part2 .effect-preview-grid{gap:12px}#part2 .effect-preview-stage{border-radius:9px}#part2 .effect-preview-card figcaption{font-size:12px}}
 
 #part2 .effect-preview-group h4>i{font:normal 17px/1.5 system-ui,sans-serif;color:#999}
 #part2 .effect-preview-toggle{position:absolute;inset:0;display:grid;place-items:center;width:100%;height:100%;padding:0;background:transparent;color:#fff;opacity:1}
