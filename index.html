@@ -8,7 +8,7 @@
  <div class="index-label">设计测试 <span>03 PARTS</span></div>
  <nav class="question-nav" aria-label="测试题目">
   <a class="question-card" href="#part1" data-part="part1"><div class="question-card-top"><span>01</span><span class="nav-arrow">↗</span></div><h2>自动化<br>Pipeline 设计</h2><div class="question-body"><div class="question-body-clip"><div class="question-body-content"><p>面向全球 50 个文化大区，设计多 Agent 礼物资产生产管线。</p><ul><li>架构与质量门禁</li><li>系统提示词与 JSON 契约</li><li>断路器与止损机制</li></ul></div></div></div></a>
-  <a class="question-card" href="#part2" data-part="part2"><div class="question-card-top"><span>02</span><span class="nav-arrow">↗</span></div><h2>表情驱动<br>互动原型</h2><div class="question-body"><div class="question-body-clip"><div class="question-body-content"><p>浏览器实时识别笑容，触发雨滴与烟花，并与人物轮廓碰撞。</p><ul><li>在线体验与公开源码</li><li>实时表情与人物碰撞</li><li>性能优化与开发复盘</li></ul></div></div></div></a>
+  <a class="question-card" href="#part2" data-part="part2"><div class="question-card-top"><span>02</span><span class="nav-arrow">↗</span></div><h2>表情驱动<br>互动原型</h2><div class="question-body"><div class="question-body-clip"><div class="question-body-content"><p>用摄像头识别笑容，让微笑化作雨，大笑点亮烟花。</p><ul><li>实时表情与粒子反馈</li><li>人物碰撞与视觉遮挡</li><li>性能控制与开发复盘</li></ul></div></div></div></a>
   <a class="question-card" href="#part3" data-part="part3"><div class="question-card-top"><span>03</span><span class="nav-arrow">↗</span></div><h2>图像美学<br>评测</h2><div class="question-body"><div class="question-body-clip"><div class="question-body-content"><p>为 20 张图像建立可观察、有依据的评分标准。</p><ul><li>五个维度与半星量表</li><li>完整排序与逐图依据</li><li>最佳三张与最差三张</li></ul></div></div></div></a>
  </nav>
  <div class="sidebar-bottom"><span class="live-dot"></span>设计测试答卷<span id="reading-progress">00 / 03</span></div>
@@ -27,6 +27,7 @@
   <div class="pa-board" id="pa-board">
    <div class="pa-board-toolbar"><div class="pa-board-title">完整生产工作流<span>4 ROLES · BATCH QUEUE</span></div><div class="pa-board-tools"><button id="pa-reset" aria-label="重置节点位置与视图">重置</button><button id="pa-zoom-out" aria-label="缩小工作流"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14"/></svg></button><span id="pa-zoom-level" class="pa-zoom-level" aria-live="off">100%</span><button id="pa-zoom-in" aria-label="放大工作流"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5v14"/></svg></button><button id="pa-expand" aria-label="放大工作流画布"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/></svg></button></div></div>
    <div class="pa-viewport" id="pa-viewport" tabindex="0" aria-label="拖动节点调整位置，拖动空白平移；滚轮或加减按钮缩放，重置恢复节点位置。"><div id="pa-world" class="pa-world"><svg id="pa-wires" aria-hidden="true" width="1000" height="850"><defs></defs><g id="pa-edge-paths"></g><g id="pa-edge-lights"></g><g id="pa-edge-labels"></g></svg><div id="pa-nodes"></div></div></div>
+   <button type="button" class="pa-board-hint" id="pa-board-hint">点击放大，查看节点细节<span aria-hidden="true">↗</span></button>
   </div>
   <div class="pa-flow-legend" aria-label="工作流颜色图例">
    <div><span class="pa-legend-label">卡片角色</span><ul><li><i class="pa-role-swatch input"></i>基础输入</li><li><i class="pa-role-swatch agent"></i>Agent</li><li><i class="pa-role-swatch control"></i>程序控制</li><li><i class="pa-role-swatch tool"></i>模型工具</li><li><i class="pa-role-swatch human"></i>人工处理</li></ul></div>
@@ -35,8 +36,8 @@
   <div class="pa-agent-grid" aria-label="四个 Agent 的职责">
    <article><header><h4>需求解析 Agent</h4></header><p class="pa-agent-purpose">把一个母版，拆成各地区可执行的资产需求。</p><dl><div><dt>输入</dt><dd>母版、目标文化大区、资产清单与交付规格。</dd></div><div><dt>任务</dt><dd>按交付要求拆分各地区的外观、动作与资产清单，形成需求说明（Brief）。</dd></div><div><dt>输出</dt><dd>分地区 Brief 与资产清单，传给 文化合规 Agent。</dd></div></dl></article>
    <article><header><h4>文化合规 Agent</h4></header><p class="pa-agent-purpose">把文化要求变成可追溯、可共用的约束。</p><dl><div><dt>输入</dt><dd>地区 Brief、资产清单及有来源的文化资料。</dd></div><div><dt>任务</dt><dd>查证禁用元素与可用替代，标注来源；同地区复用已确认规则，依据冲突转人工。</dd></div><div><dt>输出</dt><dd>需求与文化约束，供生成编排和产物审核共同使用。</dd></div></dl></article>
-   <article><header><h4>生成编排与修正 Agent</h4></header><p class="pa-agent-purpose">首次写制作计划，获准退修后修改对应步骤。</p><dl><div><dt>输入</dt><dd>资产需求、文化约束与工具清单；退修时加问题报告和重试许可。</dd></div><div><dt>任务</dt><dd>编写提示词、参数、镜头和步骤依赖。退修只修改受影响部分，复用其余合格产物。</dd></div><div><dt>输出</dt><dd>一份 JSON 调用计划（plan.json），交执行队列校验与制作。</dd></div></dl></article>
-   <article><header><h4>产物质量合规审核 Agent</h4></header><p class="pa-agent-purpose">独立检查实际成品，给出有证据的判定。</p><dl><div><dt>输入</dt><dd>成品与源文件、Brief、文化约束及程序检测结果。</dd></div><div><dt>任务</dt><dd>检查结构、动作、视觉质量与文化合规，定位问题并绑定资产版本。</dd></div><div><dt>输出</dt><dd>通过 → 成品与记录交打包；不通过 → 问题报告交重试与预算控制。</dd></div></dl></article>
+   <article><header><h4>生成编排与修正 Agent</h4></header><p class="pa-agent-purpose">首次写制作计划，获准退修后修改对应步骤。</p><dl><div><dt>输入</dt><dd>资产需求、文化约束与工具清单；退修时加对应资产与版本的审核问题报告。</dd></div><div><dt>任务</dt><dd>编写提示词、参数、镜头和步骤依赖。退修只修改受影响部分，复用其余合格产物。</dd></div><div><dt>输出</dt><dd>一份 JSON 调用计划（plan.json），交执行队列校验与制作。</dd></div></dl></article>
+   <article><header><h4>产物质量合规审核 Agent</h4></header><p class="pa-agent-purpose">独立检查实际成品，给出有证据的判定。</p><dl><div><dt>输入</dt><dd>成品与源文件、Brief、文化约束及程序检测结果。</dd></div><div><dt>任务</dt><dd>检查结构、动作、视觉质量与文化合规，定位问题并绑定资产版本。</dd></div><div><dt>输出</dt><dd>通过 → 成品与记录交打包；不通过 → 问题报告交重试与熔断控制。</dd></div></dl></article>
   </div>
   <div class="pa-answer-prose pa-architecture-copy" aria-label="生产流程的文字说明">
    <p><strong>复用角色，并行生产。</strong>50 个文化大区共用四类 Agent，按资产清单拆成带编号的任务，由队列限制同时制作数；各资产可并行，同一资产按步骤依赖执行。需求与文化约束共同传给生成和审核，生成 Agent 编排工具调用，独立审核 Agent 负责放行。</p>
@@ -49,26 +50,46 @@
    <h4>核心系统提示词</h4><pre id="pa-prompt-display" tabindex="0"></pre>
    <p><strong>程序保障：</strong>启用结构化输出约束，并在执行前校验格式、工具权限和步骤依赖；格式错误仅允许修复一次，仍失败转人工，未经校验不调用工具。</p>
   </div>
-  <div class="pa-contract-panel"><div class="pa-contract-header"><div><span class="pa-overline">JSON</span><h4>JSON 调用示例</h4></div></div><p class="pa-code-foot">这是生成 Agent 交给执行程序的 JSON 计划。<code>tool</code> 指定动作，<code>model_ref</code> 指定模型版本；程序将其转换为供应商请求，取得结果后再执行下一步。示例用 Tripo 制作模型与材质，用已注册的 Blender 脚本完成动作和渲染。</p><p class="pa-code-foot pa-call-note"><code>negative_terms</code> 是希望避免生成的元素清单；模型支持时映射为负向提示词，不支持时通过正向约束与产物审核处理。禁用规则为虚构示例，负向提示词不替代合规审核。</p><pre id="pa-example-display" tabindex="0"></pre></div>
+  <div class="pa-contract-panel"><div class="pa-contract-header"><div><span class="pa-overline">JSON</span><h4>JSON 调用示例</h4></div><div class="pa-example-tabs" id="pa-example-tabs" role="tablist" aria-label="切换示例场景"></div></div><p class="pa-code-foot">这是生成 Agent 交给执行程序的 JSON 计划。<code>tool</code> 指定动作，<code>model_ref</code> 指定模型版本；程序将其转换为供应商请求，取得结果后再执行下一步。</p><p class="pa-code-foot pa-call-note"><code>negative_terms</code> 是希望避免生成的元素清单；模型支持时映射为负向提示词，不支持时通过正向约束与产物审核处理。禁用规则为虚构示例，负向提示词不替代合规审核。</p><p class="pa-example-caption" id="pa-example-caption" aria-live="polite"></p><pre id="pa-example-display" tabindex="0" role="tabpanel"></pre></div>
 
-  <div class="pa-section-heading pa-question-heading" id="pa-question-03"><h3><span>问题 03</span><i aria-hidden="true">/</i>保险机制</h3><p>当同一资产持续失败时，由程序决定重试或熔断，并将停止后的任务交给人工。</p></div>
+  <div class="pa-section-heading pa-question-heading" id="pa-question-03"><h3><span>问题 03</span><i aria-hidden="true">/</i>保险机制</h3><p>断路器是确定性程序，不是 Agent：被熔断的正是 Agent，不能由它自己判断是否陷入循环。</p></div>
 
   <figure class="pa-safety-flow" aria-labelledby="pa-safety-title">
-   <figcaption><strong id="pa-safety-title">退修与熔断的判定流程</strong></figcaption>
+   <figcaption><strong id="pa-safety-title">退修与熔断的判定流程</strong><span class="pa-swipe-hint">左右滑动查看完整流程 →</span></figcaption>
    <div class="pa-safety-scroll" tabindex="0" aria-label="退修与熔断流程图，从上往下阅读，小屏可横向查看"><div class="pa-safety-canvas">
     <svg class="pa-safety-wires" aria-hidden="true"></svg>
-    <article class="pa-safety-node" data-safety-node="plan" data-safety-type="agent"><span class="pa-safety-role">Agent</span><h4>生成编排与修正 Agent</h4><p>首次编排，或按获准退修的问题报告改写，输出 JSON 计划。</p></article>
+    <article class="pa-safety-node" data-safety-node="plan" data-safety-type="agent"><span class="pa-safety-role">Agent</span><h4>生成编排与修正 Agent</h4><p>首次编排；或依据交回的审核问题报告，只改受影响的步骤，输出 JSON 计划。</p></article>
     <article class="pa-safety-node" data-safety-node="tools" data-safety-type="tool"><span class="pa-safety-role">程序 / 模型工具</span><h4>执行制作</h4><p>队列按依赖调用工具，产出当前版本的成品与检查结果。</p></article>
-    <article class="pa-safety-node" data-safety-node="review" data-safety-type="agent"><span class="pa-safety-role">Agent</span><h4>产物质量合规审核 Agent</h4><p>独立检查实际成品，判定通过或不通过，返回具体问题。</p></article>
-    <article class="pa-safety-node is-controller" data-safety-node="control" data-safety-type="control"><span class="pa-safety-role">程序控制</span><h4>重试与预算判定</h4><p>本轮费用结算后，对照以下上限判定。</p><div class="pa-safety-config"><label><span>次数上限</span><input id="pa-safety-retry-limit" type="number" min="0" step="1" value="3" aria-label="单资产重试次数上限"></label><label><span>预算上限（元）</span><input id="pa-safety-budget" type="number" min="0.01" step="0.01" value="100" aria-label="单资产预算上限，元"></label></div></article>
+    <article class="pa-safety-node" data-safety-node="review" data-safety-type="agent"><span class="pa-safety-role">Agent</span><h4>产物质量合规审核 Agent</h4><p>独立检查实际成品，判定通过或不通过。</p></article>
+    <article class="pa-safety-node is-controller" data-safety-node="control" data-safety-type="control"><span class="pa-safety-role">程序控制</span><h4>重试与熔断判定</h4><p>本轮费用结算后，对照次数与预算上限判定。</p><div class="pa-safety-config"><label><span>次数上限</span><input id="pa-safety-retry-limit" type="number" min="0" step="1" value="3" aria-label="单资产重试次数上限"></label><label><span>预算上限（元）</span><input id="pa-safety-budget" type="number" min="0.01" step="0.01" value="100" aria-label="单资产预算上限，元"></label></div></article>
     <article class="pa-safety-node" data-safety-node="package" data-safety-type="control"><span class="pa-safety-state"><i class="normal"></i>审核通过</span><h4>打包整理程序</h4><p>汇总已通过的成品、源文件、预览及审核记录。</p></article>
-    <article class="pa-safety-node" data-safety-node="human" data-safety-type="human"><span class="pa-safety-state"><i class="exception"></i>熔断 / 转人工</span><h4>异常人工复核</h4><p>停止新增调用，保存失败记录，交设计师与本地化负责人处理。</p></article>
+    <article class="pa-safety-node" data-safety-node="human" data-safety-type="human"><span class="pa-safety-state"><i class="exception"></i>熔断 / 转人工</span><h4>异常人工复核</h4><p>接收审核问题报告、历次产物与费用记录，由设计师与本地化负责人接管。</p></article>
     <article class="pa-safety-node" data-safety-node="designer" data-safety-type="human"><span class="pa-safety-role">人工验收</span><h4>设计师</h4><p>验收已审核、已整理的成品包。</p></article>
    </div></div>
   </figure>
-  <div class="pa-answer-prose pa-insurance-copy" aria-label="重试与熔断的文字说明">
-   <p><strong>何时熔断。</strong>当前资产审核不通过时，程序结算本轮费用：已用重试次数达到配置上限，<strong>或</strong>累计实际费用达到预算上限，就停止后续调用；两项均未达到，才携带问题报告返回生成 Agent 修正。首轮不计重试，修改版本不清零，费用未结清先等待。预算限制的是后续重试，本轮已发生费用仍可能使总额超限。</p>
-   <p><strong>如何止损。</strong>冻结该资产、撤销未执行任务、隔离失败产物，保存历次指令、问题证据和费用记录，交人工决定复用已验证模板、人工制作或取消。其他资产继续生产；自动化不擅自恢复，避免同一几何错误反复消耗算力。</p>
+  <div class="pa-trigger-panel" id="pa-triggers" aria-label="断路器触发条件">
+   <div class="pa-trigger-head"><span class="pa-overline">TRIGGERS</span><h4><span class="pa-title-chip is-breaker">断路器触发条件</span></h4><p>审核不通过时，次数与预算都有余量就继续退修；任一条件命中，即触发断路器，转入后续止损。</p></div>
+   <ol class="pa-trigger-list">
+    <li><span class="pa-trigger-scope">单资产</span><div><strong>重试次数达到上限</strong><p>持续退修仍未通过，说明自动修正已无效。上限在流程图中可调，首轮不计入。</p></div></li>
+    <li><span class="pa-trigger-scope">单资产</span><div><strong>累计费用达到预算上限</strong><p>每轮结算后核对，已达上限就不再授权下一轮，防止算力持续空转。</p></div></li>
+    <li class="is-region"><span class="pa-trigger-scope">单地区</span><div><strong>同一地区多个资产因文化合规接连熔断</strong><p>多为该地区的文化约束本身有误或冲突。暂停该地区未开始的任务，交人工复查规则；几何等与地区无关的问题不计入，其他地区照常生产。</p></div></li>
+   </ol>
+   <p class="pa-trigger-note"><strong>极小语种地区：</strong>资料来源少、规则置信度低，默认收紧阈值，重试上限减半，首批产物全部人工复核。</p>
+  </div>
+  <div class="pa-report-panel">
+   <div class="pa-report-head"><span class="pa-overline">REVIEW REPORT</span><h4><span class="pa-title-chip is-report"><i class="pa-doc-icon" aria-hidden="true"></i>审核问题报告</span></h4><p>审核不通过时由产物质量合规审核 Agent 输出，流程图中以同色标签标出。程序判定后，报告有两个去向：<b class="is-retry">重试</b>时交回生成编排与修正 Agent，只改受影响的步骤；<b class="is-breaker">触发断路器</b>时随工单交异常人工复核，作为接管依据。<code>check_id</code> 为问题类型，示例为“几何体自相交”。</p></div>
+   <pre id="pa-report-display" tabindex="0"></pre>
+  </div>
+  <div class="pa-stoploss" aria-label="后续止损机制">
+   <div class="pa-trigger-head"><span class="pa-overline">AFTER HALT</span><h4>后续止损机制</h4><p>断路器触发后，只停这一个资产或地区，其余照常生产。</p></div>
+   <ol class="pa-stoploss-grid">
+    <li><span>01</span><strong>冻结</strong><p>撤销该资产未执行的任务，不再调用任何模型。</p></li>
+    <li><span>02</span><strong>留档</strong><p>保存历次计划、产物、审核报告与费用记录。</p></li>
+    <li><span>03</span><strong>降级交付</strong><p>该地区先上线不含地域元素的通用版礼物，不拖累整体上线。</p></li>
+    <li><span>04</span><strong>人工接管</strong><p>工单交设计师与本地化负责人，附失败摘要和最接近通过的版本。</p></li>
+    <li><span>05</span><strong>试探恢复</strong><p>人工修订规则或需求后，先放行一个任务，通过再恢复自动生产。</p></li>
+    <li><span>06</span><strong>经验回流</strong><p>失败原因写回文化规则与提示词库，同类资产下次直接规避。</p></li>
+   </ol>
   </div>
  </section>
  <section id="part2" class="part-section interaction-answer">

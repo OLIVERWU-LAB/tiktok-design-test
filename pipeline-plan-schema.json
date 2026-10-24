@@ -1,0 +1,254 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "asset_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "route": {
+      "enum": [
+        "3d",
+        "video"
+      ]
+    },
+    "status": {
+      "enum": [
+        "ready",
+        "substituted",
+        "review",
+        "stop"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tool": {
+            "type": "string",
+            "minLength": 1
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "prompt": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "negative_terms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "settings": {
+            "type": "object"
+          },
+          "model_ref": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "tool",
+          "model_ref",
+          "depends_on",
+          "inputs",
+          "prompt",
+          "negative_terms",
+          "settings"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "model_ref": {
+                  "type": "null"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "prompt": {
+                  "type": "null"
+                },
+                "negative_terms": {
+                  "maxItems": 0
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "repair": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "failed_step": {
+              "type": "string",
+              "minLength": 1
+            },
+            "changes": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 1
+            }
+          },
+          "required": [
+            "failed_step",
+            "changes"
+          ]
+        }
+      ]
+    },
+    "compliance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "rule_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "substitutions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "original": {
+                "type": "string",
+                "minLength": 1
+              },
+              "replacement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rule_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "original",
+              "replacement",
+              "rule_id"
+            ]
+          }
+        }
+      },
+      "required": [
+        "rule_ids",
+        "substitutions"
+      ]
+    }
+  },
+  "required": [
+    "task_id",
+    "asset_version",
+    "policy_version",
+    "route",
+    "status",
+    "reason",
+    "steps",
+    "repair",
+    "compliance"
+  ],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "礼物资产制作计划 · 核心调用契约",
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "review",
+              "stop"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "steps": {
+            "maxItems": 0
+          }
+        }
+      },
+      "else": {
+        "properties": {
+          "steps": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "substituted"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "compliance": {
+            "properties": {
+              "substitutions": {
+                "minItems": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

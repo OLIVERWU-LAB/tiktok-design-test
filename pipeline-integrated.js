@@ -18,7 +18,7 @@ const nodes={
  demand:{x:708,y:180,type:'agent',title:'需求解析',inputs:inp('batch','母版、目标地区与交付要求'),body:fields(['任务','每地区整理一份需求说明，拆成资产清单，明确各项的外观、动作和交付规格；每项资产分配独立编号。']),outputs:out('briefs','分地区需求说明与资产清单')},
  culture:{x:1344,y:180,type:'agent',title:'文化合规',inputs:inp('briefs','地区需求说明与资产清单'),body:fields(['任务','查证有来源的文化规则，明确禁用元素、可用替代与素材要求。同地区复用已确认的规则；资料冲突先交人工确认。']),outputs:out('packet','资产需求与文化约束')},
  queue:{x:2616,y:180,type:'control',title:'执行队列与调度',inputs:inp('plan','JSON 调用计划','plan.json'),body:`<div class="pa-fields"><label class="pa-field">同时制作数<input id="pa-concurrency" type="number" min="1" value="4"></label></div>`+fields(['任务','按步骤依赖与同时制作数调度工具；调用结束后回写该资产的实际费用。']),outputs:out('dispatch','按制作顺序调用工具')},
- plan:{x:1980,y:180,type:'agent',title:'生成编排与修正',body:scenario('initial','首次生成',inp('task','资产需求、文化约束与可用工具')+fields(['编排','为当前资产编写提示词，安排制作步骤、工具参数和先后依赖；视频路线同时安排镜头与时长。']))+`<div class="pa-scenario-or" aria-hidden="true">或</div>`+scenario('repair','审核退回 · 获准重试时',inp('repair','对应资产与版本的错误报告、重试许可')+fields(['修正','根据问题位置和审核依据，改写对应提示词或参数；重做受影响步骤，复用其余合格产物。'])),outputs:`<div class="pa-shared-output">${out('plan','JSON 调用计划','plan.json')}</div>`},
+ plan:{x:1980,y:180,type:'agent',title:'生成编排与修正',body:scenario('initial','首次生成',inp('task','资产需求、文化约束与可用工具')+fields(['编排','为当前资产编写提示词，安排制作步骤、工具参数和先后依赖；视频路线同时安排镜头与时长。']))+`<div class="pa-scenario-or" aria-hidden="true">或</div>`+scenario('repair','审核退回 · 重试时',inp('repair','对应资产与版本的审核问题报告')+fields(['修正','根据问题位置和审核依据，改写对应提示词或参数；重做受影响步骤，复用其余合格产物。'])),outputs:`<div class="pa-shared-output">${out('plan','JSON 调用计划','plan.json')}</div>`},
  mesh:{x:3324,y:220,type:'tool',route:'3d',title:'模型',inputs:inp('plan','模型提示词与已有底模'),body:fields(['任务','复用或生成几何模型。']),outputs:out('mesh','几何模型')+thumbnail('mesh','模型')},
  texture:{x:3960,y:220,type:'tool',route:'3d',title:'材质',inputs:inp('mesh','几何模型与材质要求'),body:fields(['任务','依模型 UV 适配贴图，检查模型与纹理是否匹配。']),outputs:out('material','带材质的模型')+thumbnail('texture','材质')},
  motion:{x:4596,y:220,type:'tool',route:'3d',title:'动作与渲染',inputs:inp('material','带材质的模型与动作要求'),body:fields(['任务','刚体使用变换，角色按需绑定；制作动作与检查预览，保留源文件。']),outputs:out('candidate','3D 成品与源文件')+thumbnail('motion','动作与渲染')},
@@ -26,10 +26,10 @@ const nodes={
  frames:{x:3960,y:820,type:'tool',route:'video',title:'分镜与关键帧',inputs:inp('image','主体参考图与镜头安排'),body:fields(['任务','按镜头生成关键帧，确定首尾画面与时长。']),outputs:out('frames','分镜与关键帧')+thumbnail('frames','分镜与关键帧')},
  video:{x:4596,y:820,type:'tool',route:'video',title:'视频与合成',inputs:inp('frames','分镜、关键帧与动作提示词'),body:fields(['任务','生成片段并合成，处理透明通道与输出规格。']),outputs:out('candidate','视频成品与源文件')+thumbnail('video','视频与合成')},
  review:{x:5376,y:520,type:'agent',title:'产物质量合规审核',inputs:inp('3d','3D 成品与源文件')+inp('video','视频成品与源文件'),body:fields(['任务','独立对照需求说明、文化约束和规格检测结果，检查实际产物的结构、画面与动作；报告标明问题位置、证据及资产版本。']),outputs:decision('按审核结果',branch('pass','通过','质量、文化合规与交付规格均通过','成品与通过记录 → 打包整理')+branch('fail','拦截','质量、结构或文化合规不达标','问题报告与资产版本'))},
- runtime:{x:6012,y:1420,type:'control',title:'重试与预算控制',inputs:inp('report','当前资产的不通过报告'),body:fields(['任务','本轮费用结算后，核对当前资产的已用重试次数与累计实际费用。'])+`<div class="pa-fields"><label class="pa-field">单资产重试上限<input id="pa-retry-limit" type="number" min="0" value="3"></label><label class="pa-field">单资产预算（元）<input id="pa-budget" type="number" min="0.01" step="0.01" value="100"></label></div>`,outputs:decision('按控制判定',branch('retry','重试','次数未用尽，且累计实际费用未达预算上限','退修报告与一次重试许可')+branch('halt','停止','次数用尽，或累计实际费用达到预算上限','保存记录，交异常人工复核'))},
+ runtime:{x:6012,y:1420,type:'control',title:'重试与熔断控制',inputs:inp('report','当前资产的不通过报告'),body:fields(['任务','本轮费用结算后，核对当前资产的已用重试次数与累计实际费用。'])+`<div class="pa-fields"><label class="pa-field">单资产重试上限<input id="pa-retry-limit" type="number" min="0" value="3"></label><label class="pa-field">单资产预算（元）<input id="pa-budget" type="number" min="0.01" step="0.01" value="100"></label></div>`,outputs:decision('按控制判定',branch('retry','重试','次数与费用均未达上限','审核问题报告')+branch('halt','触发断路器','次数或费用达到上限','保存审核问题报告记录，交异常人工复核'))},
 
  human:{x:6648,y:790,type:'human',title:'设计师',inputs:inp('package','已审核并整理的完整成品包'),body:fields(['任务','验收成品、预览和审核记录。'])},
- exception:{x:6648,y:2340,type:'human',title:'异常人工复核',inputs:inp('halt','问题证据、历史产物与费用记录'),body:fields(['任务','设计师与本地化负责人接管处理，自动化在此停止。'])},
+ exception:{x:6648,y:2340,type:'human',title:'异常人工复核',inputs:inp('halt','审核问题报告记录、历史产物与费用'),body:fields(['任务','设计师与本地化负责人接管处理，自动化在此停止。'])},
  delivery:{x:6012,y:640,type:'control',title:'打包整理',inputs:inp('pass','审核通过的成品与记录'),body:fields(['任务','汇总成品、源文件、预览与清单，检查文件是否完整。']),outputs:out('package','完整成品包与清单')}
 };
 const edges=[];const edge=(id,from,to,label='',alert=false,route=null)=>edges.push({id,from,to,label,alert,route});
@@ -47,7 +47,7 @@ edge('frames-video',['frames','right','frames'],['video','left','frames'],'',fal
 edge('video-review',['video','right','candidate'],['review','left','video'],'候选成品',false,'video');
 edge('review-error',['review','right','fail'],['runtime','left','report'],'不通过',true);
 edge('retry',['runtime','right','retry'],['plan','left','repair'],'',true);
-edge('halt',['runtime','right','halt'],['exception','left','halt'],'熔断 · 人工复核',true);
+edge('halt',['runtime','right','halt'],['exception','left','halt'],'触发断路器',true);
 edge('review-package',['review','right','pass'],['delivery','left','pass']);
 edge('package-human',['delivery','right','package'],['human','left','package']);
 const normals={right:[1,0],left:[-1,0],top:[0,-1],bottom:[0,1]};
@@ -70,7 +70,7 @@ for(const[id,n]of Object.entries(nodes)){
  for(const field of el.querySelectorAll('.pa-field')){const label=document.createElement('span');label.className='pa-field-label';for(const child of [...field.childNodes])if(child.nodeType===3){label.append(child);}field.prepend(label);if(field.querySelector('textarea'))field.classList.add('pa-field-long');}
  $('#pa-nodes').append(el);n.el=el;n.h=el.offsetHeight;
 }
-const roleGradients={control:[['#CA4106',0],['#E0814C',100]],tool:[['#9620A6',0],['#C14CC5',100]],human:[['#096749',0],['#0FB374',100]],agent:[['#2A6AFF',0],['#3B64F4',18],['#15B7D0',100]]};
+const roleGradients={control:[['#E84A0C',0],['#E84A0C',100]],tool:[['#2B2E34',0],['#2B2E34',100]],human:[['#0A8A55',0],['#0A8A55',100]],agent:[['#1F45E6',0],['#1F45E6',100]]};
 function updateFrameFill(n){
  const target=n.headerOnly?n.el.querySelector('.pa-card-head'):n.el,stops=roleGradients[n.type],width=target.offsetWidth||NW,height=n.headerOnly?target.offsetHeight:n.h,key=width+'x'+height;if(!stops||n.fillKey===key)return;n.fillKey=key;const endY=n.type==='agent'?height:height*.5;
  const markup=`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}"><defs><linearGradient id="fill" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="${width}" y2="${endY}">${stops.map(([color,offset])=>`<stop offset="${offset}%" stop-color="${color}"/>`).join('')}</linearGradient></defs><rect width="${width}" height="${height}" fill="url(#fill)"/></svg>`;
@@ -154,10 +154,13 @@ function contentBounds(){
  return {left:Math.min(...xs)-40,right:Math.max(...xs)+40,top:Math.min(...ys)-40,bottom:Math.max(...ys)+40};
 }
 function fit(){const w=viewport.clientWidth,h=viewport.clientHeight,b=contentBounds(),bw=b.right-b.left,bh=b.bottom-b.top;state.scale=Math.max(.02,Math.min(1.15,(w-48)/bw,(h-48)/bh));state.x=(w-bw*state.scale)/2-b.left*state.scale;state.y=(h-bh*state.scale)/2-b.top*state.scale;transform();}
+function view(){board.classList.contains("is-expanded")?fit():focusStart();}
+// Inline view opens on the readable main chain (input → plan); the full graph stays one click away.
+function focusStart(){const w=viewport.clientWidth,h=viewport.clientHeight,ids=['input','demand','culture','plan'],left=nodes.input.x-60,right=nodes.plan.x+NW+60,top=Math.min(...ids.map(id=>nodes[id].y))-60,bottom=Math.max(...ids.map(id=>nodes[id].y+nodes[id].h))+60;state.scale=Math.max(.06,Math.min(.6,w/(right-left),h/(bottom-top)));state.x=(w-(right-left)*state.scale)/2-left*state.scale;state.y=Math.max(12,(h-(bottom-top)*state.scale)/2)-top*state.scale;transform();}
 
 function zoom(factor,px,py){zoomBusy=true;clearTimeout(zoomTimer);zoomTimer=setTimeout(()=>zoomBusy=false,160);fitMode=false;const cx=px??viewport.clientWidth/2,cy=py??viewport.clientHeight/2,wx=(cx-state.x)/state.scale,wy=(cy-state.y)/state.scale;state.scale=Math.max(.04,Math.min(1.8,state.scale*factor));state.x=cx-wx*state.scale;state.y=cy-wy*state.scale;transform();}
 function syncMotion(){world.classList.toggle('pa-static',!visible||document.hidden||reduced.matches);}
-$('#pa-reset').onclick=()=>{Object.assign(group,defaultGroup);groupEl.style.left=group.x+'px';groupEl.style.top=group.y+'px';for(const[id,n]of Object.entries(nodes)){Object.assign(n,defaultPositions[id]);n.el.style.left=n.x+'px';n.el.style.top=n.y+'px';updateCables(id);}fitMode=true;fit();};
+$('#pa-reset').onclick=()=>{Object.assign(group,defaultGroup);groupEl.style.left=group.x+'px';groupEl.style.top=group.y+'px';for(const[id,n]of Object.entries(nodes)){Object.assign(n,defaultPositions[id]);n.el.style.left=n.x+'px';n.el.style.top=n.y+'px';updateCables(id);}fitMode=true;view();};
 $('#pa-zoom-in').onclick=()=>zoom(1.25);$('#pa-zoom-out').onclick=()=>zoom(.8);;
 viewport.addEventListener('pointerdown',e=>{
  if(e.target.closest('input,select,textarea,button,label,.pa-select')||e.button!==0)return;e.preventDefault();const card=e.target.closest('[data-flow-node]'),id=card?.dataset.flowNode,isGroup=!card&&e.target.closest('[data-flow-group]');
@@ -171,7 +174,7 @@ viewport.addEventListener('pointermove',e=>{
 });
 for(const event of ['pointerup','pointercancel','lostpointercapture'])viewport.addEventListener(event,()=>{if(drag?.id)nodes[drag.id].el.classList.remove('pa-dragging');drag=null;viewport.classList.remove('pa-panning');});
 viewport.addEventListener('wheel',e=>{if(board.classList.contains('is-expanded'))e.stopPropagation();if(drag)return;if(e.target.closest('input,select,textarea,.pa-select'))return;if(!board.classList.contains('is-expanded')&&!e.ctrlKey&&!e.metaKey)return;e.preventDefault();const r=viewport.getBoundingClientRect();zoom(Math.exp(-Math.max(-120,Math.min(120,e.deltaY))*.003),e.clientX-r.left,e.clientY-r.top);},{passive:false});
-viewport.addEventListener('keydown',e=>{if(e.target!==viewport)return;if(e.key==='+'||e.key==='='){e.preventDefault();zoom(1.25);}else if(e.key==='-'){e.preventDefault();zoom(.8);}else if(e.key==='0'){e.preventDefault();fitMode=true;fit();}});
+viewport.addEventListener('keydown',e=>{if(e.target!==viewport)return;if(e.key==='+'||e.key==='='){e.preventDefault();zoom(1.25);}else if(e.key==='-'){e.preventDefault();zoom(.8);}else if(e.key==='0'){e.preventDefault();fitMode=true;view();}});
 let returnFocus=null,previousOverflow='',savedView=null,placeholder=null;let modalSwitch=false;
 const backdrop=document.createElement('button');backdrop.className='pa-modal-backdrop';backdrop.type='button';backdrop.setAttribute('aria-label','关闭工作流大图');backdrop.tabIndex=-1;backdrop.hidden=true;document.body.append(backdrop);
 function setExpanded(open){
@@ -186,16 +189,16 @@ function setExpanded(open){
  }else{
   board.classList.remove('is-expanded');placeholder.replaceWith(board);placeholder=null;document.body.style.overflow=previousOverflow;document.documentElement.classList.remove('pa-modal-open');
   board.removeAttribute('role');board.removeAttribute('aria-modal');board.removeAttribute('aria-label');
-  if(savedView){fitMode=savedView.fitMode;state={scale:savedView.scale,x:savedView.x,y:savedView.y};}measure();if(fitMode)fit();applyTransform();
+  if(savedView){fitMode=savedView.fitMode;state={scale:savedView.scale,x:savedView.x,y:savedView.y};}measure();if(fitMode)view();applyTransform();
  }
  backdrop.hidden=!open;expand.setAttribute('aria-label',open?'收起工作流画布':'放大工作流画布');expand.setAttribute('aria-expanded',String(open));expand.querySelector('path').setAttribute('d',open?'M3 8h5V3M21 8h-5V3M3 16h5v5M21 16h-5v5':'M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5');
  if(open)expand.focus({preventScroll:true});else returnFocus?.focus({preventScroll:true});
  visible=open||visible;syncMotion();modalSwitch=false;
 }
-$('#pa-expand').onclick=()=>setExpanded(!board.classList.contains('is-expanded'));backdrop.onclick=()=>setExpanded(false);backdrop.addEventListener('wheel',e=>{e.preventDefault();e.stopPropagation();},{passive:false});
+$('#pa-expand').onclick=()=>setExpanded(!board.classList.contains('is-expanded'));$('#pa-board-hint').onclick=()=>setExpanded(true);backdrop.onclick=()=>setExpanded(false);backdrop.addEventListener('wheel',e=>{e.preventDefault();e.stopPropagation();},{passive:false});
 document.addEventListener('keydown',e=>{if(!board.classList.contains('is-expanded'))return;if(e.key==='Escape'){e.preventDefault();setExpanded(false);}else if(e.key==='Tab'){const list=[...board.querySelectorAll('button,input,select,textarea,[tabindex="0"]')].filter(el=>!el.disabled&&!el.closest('[hidden]')&&el.tabIndex!==-1),first=list[0],last=list.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
-let lastViewportWidth=-1,lastViewportHeight=-1;new ResizeObserver(()=>{if(modalSwitch)return;const w=viewport.clientWidth,h=viewport.clientHeight;if(w===lastViewportWidth&&h===lastViewportHeight)return;lastViewportWidth=w;lastViewportHeight=h;measure();if(fitMode)fit();}).observe(viewport);new IntersectionObserver(([entry])=>{visible=board.classList.contains('is-expanded')||entry.isIntersecting;syncMotion();},{threshold:0}).observe(board);document.addEventListener('visibilitychange',syncMotion);reduced.addEventListener('change',syncMotion);fit();syncMotion();
-syncConfig();document.fonts.ready.then(()=>{measure();if(fitMode)fit();});
+let lastViewportWidth=-1,lastViewportHeight=-1;new ResizeObserver(()=>{if(modalSwitch)return;const w=viewport.clientWidth,h=viewport.clientHeight;if(w===lastViewportWidth&&h===lastViewportHeight)return;lastViewportWidth=w;lastViewportHeight=h;measure();if(fitMode)view();}).observe(viewport);new IntersectionObserver(([entry])=>{visible=board.classList.contains('is-expanded')||entry.isIntersecting;syncMotion();},{threshold:0}).observe(board);document.addEventListener('visibilitychange',syncMotion);reduced.addEventListener('change',syncMotion);view();syncMotion();
+syncConfig();document.fonts.ready.then(()=>{measure();if(fitMode)view();});
 // The insurance answer is a separate reading diagram; main-workbench geometry stays unchanged.
 const safetyCanvas=$('.pa-safety-canvas');
 if(safetyCanvas){
@@ -204,10 +207,10 @@ if(safetyCanvas){
  const safetyLinks=[
   ['plan','bottom',.5,'tools','top',.5,'normal'],
   ['tools','bottom',.5,'review','top',.5,'normal'],
-  ['review','left',.5,'control','right',.5,'exception','不通过'],
-  ['review','bottom',.5,'package','top',.5,'normal','通过'],
-  ['control','top',.5,'plan','left',.5,'retry','重试'],
-  ['control','bottom',.5,'human','top',.5,'exception','次数或预算达到上限\n即停止'],
+  ['review','left',.5,'control','right',.5,'exception',{main:'不通过',kind:'alert',doc:['输出',''],at:'h'}],
+  ['review','bottom',.5,'package','top',.5,'normal',{main:'通过',kind:'pass',at:'right'}],
+  ['control','top',.5,'plan','left',.5,'retry',{main:'重试',kind:'retry',doc:['','交回修正'],at:'left'}],
+  ['control','bottom',.5,'human','top',.5,'exception',{main:'触发断路器',kind:'breaker',doc:['','交人工复核'],at:'left'}],
   ['package','bottom',.5,'designer','top',.5,'normal']
  ];
  function drawSafety(){
@@ -215,6 +218,7 @@ if(safetyCanvas){
   for(const svg of[safetySvg,safetyPorts])svg.setAttribute('viewBox',`0 0 ${rect.width} ${rect.height}`);
   const definitions=make('defs'),arrow=make('marker',{id:'pa-safety-arrow',markerWidth:9,markerHeight:9,viewBox:'0 0 10 10',refX:9,refY:5,orient:'auto',markerUnits:'userSpaceOnUse'});
   arrow.append(make('path',{d:'M1 1 L9 5 L1 9 Z',fill:'#858585'}));definitions.append(arrow);pieces.push(definitions);
+  const labels=[];
   for(const[a,side,t,b,end,u,signal,label]of safetyLinks){
    const start=pos(a,side,t),finish=pos(b,end,u),m=normals[end],returning=a==='control'&&b==='plan';
    // This reading diagram uses straight runs; the return has one rounded right angle.
@@ -223,12 +227,33 @@ if(safetyCanvas){
    // Keep the arrow upstream of the input dot, so neither covers the other.
    pieces.push(make('path',{class:'pa-safety-arrow',d:`M${finish[0]+m[0]*28} ${finish[1]+m[1]*28} L${finish[0]+m[0]*14} ${finish[1]+m[1]*14}`,'marker-end':'url(#pa-safety-arrow)'}));
    for(const[p,id,portSide]of[[start,a,side],[finish,b,end]])ports.push(make('circle',{'data-node':id,'data-side':portSide,cx:p[0],cy:p[1],r:4,fill:flowColors[signal],stroke:'#fff','stroke-width':1.6}));
-   if(label){
-    const vertical=start[0]===finish[0],tx=returning?start[0]-18:vertical?start[0]+18:(start[0]+finish[0])/2,ty=(start[1]+finish[1])/2+(vertical||returning?0:-12),lines=label.split('\n'),text=make('text',{class:'pa-safety-wire-label',x:tx,y:ty,'text-anchor':returning?'end':vertical?'start':'middle','dominant-baseline':'central'});
-    lines.forEach((line,index)=>{const span=make('tspan',{x:tx,dy:index===0?-(lines.length-1)*7:14});span.textContent=line;text.append(span);});pieces.push(text);
-   }
+   if(label)labels.push({label,start,finish,returning});
   }
   safetySvg.replaceChildren(...pieces);safetyPorts.replaceChildren(...ports);
+  const figure=safetyCanvas.closest('.pa-safety-flow');
+  // A label line is a pill: text measured in place, then a rounded plate slid underneath.
+  const pill=(x,y,anchor,str,cls,icon)=>{const g=make('g',{class:'pa-pill '+cls}),plate=make('rect',{rx:10}),txt=make('text',{x,y,'text-anchor':anchor,'dominant-baseline':'central'});txt.textContent=str;g.append(plate,txt);safetySvg.append(g);
+   const iw=icon?15:0;if(icon&&anchor==='middle')txt.setAttribute('x',x+iw/2);if(icon&&anchor==='start')txt.setAttribute('x',x+iw);
+   const b=txt.getBBox(),px=icon?8:9,left=b.x-iw-px,width=b.width+iw+px*2,height=b.height+7;plate.setAttribute('x',left);plate.setAttribute('y',y-height/2);plate.setAttribute('width',width);plate.setAttribute('height',height);plate.setAttribute('ry',height/2);
+   if(icon){const d=make('g',{class:'pa-doc-glyph',transform:`translate(${b.x-iw} ${y-6})`});d.append(make('path',{d:'M0.5 0.5h6l3 3v8.5h-9z'}),make('path',{d:'M6.5 0.5v3h3M2.5 6h5M2.5 8.5h5'}));g.append(d);}
+   return {x:left,y,w:width,h:height};};
+  // Report chip is one component (icon + 审核问题报告); verbs around it stay plain text.
+  const plainText=(g,x,str)=>{const t=make('text',{x,y:0,'dominant-baseline':'central',class:'pa-row-text'});t.textContent=str;g.append(t);return t.getBBox().width;};
+  const reportChip=(g,x)=>{const c=make('g',{class:'pa-pill is-report'}),plate=make('rect'),t=make('text',{x:x+23,y:0,'dominant-baseline':'central'});t.textContent='审核问题报告';c.append(plate,t);g.append(c);const b=t.getBBox(),w=b.width+31,h=b.height+7;plate.setAttribute('x',x);plate.setAttribute('y',-h/2);plate.setAttribute('width',w);plate.setAttribute('height',h);plate.setAttribute('rx',h/2);const d=make('g',{class:'pa-doc-glyph',transform:`translate(${x+8} -6)`});d.append(make('path',{d:'M0.5 0.5h6l3 3v8.5h-9z'}),make('path',{d:'M6.5 0.5v3h3M2.5 6h5M2.5 8.5h5'}));c.append(d);return w;};
+  const docRow=(x,y,anchor,pre,post)=>{const g=make('g',{class:'pa-doc-row'});safetySvg.append(g);let cx=0;if(pre)cx+=plainText(g,cx,pre)+5;cx+=reportChip(g,cx);if(post){cx+=5;cx+=plainText(g,cx,post);}const ox=anchor==='end'?x-cx:anchor==='middle'?x-cx/2:x;g.setAttribute('transform',`translate(${ox} ${y})`);};
+  for(const{label:l,start,finish,returning}of labels){
+   let x,y1,y2,anchor;
+   if(l.at==='h'){x=(start[0]+finish[0])/2;anchor='middle';y1=start[1]-15;y2=start[1]+17;}
+   else{const top=Math.min(start[1],finish[1]),bot=Math.max(start[1],finish[1]),mid=returning?(start[1]+finish[1])/2:(top+bot)/2;x=l.at==='left'?start[0]-14:start[0]+14;anchor=l.at==='left'?'end':'start';y1=mid;y2=mid;}
+   const main=pill(x,y1,anchor,l.main,'is-'+(l.kind||'plain'),false);
+   if(l.doc){if(l.at==='h')docRow(x,y2,anchor,l.doc[0],l.doc[1]);else docRow(start[0]+14,y2,'start',l.doc[0],l.doc[1]);}
+   if(l.lead&&figure){
+    // One continuous overlay path: left out of the breaker pill, down the outer gutter, then into the trigger panel.
+    const fr=figure.getBoundingClientRect(),c=safetyNodes.control.getBoundingClientRect(),panel=document.getElementById('pa-triggers'),pb=panel?panel.getBoundingClientRect().top:rect.bottom+40,ox=rect.left-fr.left,oy=rect.top-fr.top,gx=Math.round(c.left-fr.left-22)+.5,yy=Math.round(oy+main.y)+.5,x0=ox+main.x,yEnd=pb-fr.top,yBend=Math.round(rect.bottom-fr.top+(pb-rect.bottom)/2)+.5,xEnd=30.5;
+    let ov=figure.querySelector(':scope>.pa-lead-overlay');if(!ov){ov=make('svg',{class:'pa-lead-overlay','aria-hidden':'true'});figure.append(ov);}
+    ov.setAttribute('width',fr.width);ov.setAttribute('height',yEnd+6);ov.setAttribute('viewBox',`0 0 ${fr.width} ${yEnd+6}`);
+    ov.replaceChildren(make('path',{class:'pa-safety-lead',d:`M${x0} ${yy} H${gx} V${yBend} H${xEnd} V${yEnd}`}),make('circle',{cx:xEnd,cy:yEnd,r:4,fill:'#e5262b'}));figure.classList.add('has-lead');}
+  }
  }
  let safetyFrame=0;const scheduleSafety=()=>{if(!safetyFrame)safetyFrame=requestAnimationFrame(()=>{safetyFrame=0;drawSafety();});};const safetyObserver=new ResizeObserver(scheduleSafety);safetyObserver.observe(safetyCanvas,{box:'border-box'});for(const node of Object.values(safetyNodes))safetyObserver.observe(node,{box:'border-box'});document.fonts.ready.then(scheduleSafety);drawSafety();
 }
@@ -243,5 +268,18 @@ function jsonMarkup(value){
  const lines=keys.map(key=>key==='steps'?`  "steps": [\n${value.steps.map(stepMarkup).join(',\n')}\n  ]`:`  "${key}": ${JSON.stringify(value[key])}`),raw='{\n'+lines.join(',\n')+'\n}';
  return esc(raw).replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)?|\bnull\b/g,(m,string,key)=>string?`<span class="${key?'pa-json-key':'pa-json-string'}">${string}</span>${key||''}`:'<span class="pa-json-null">null</span>');
 }
-$('#pa-example-display').innerHTML=jsonMarkup(window.ANSWER.examples.threeD);
+const exampleTabs=[
+ ['threeD','正常 · 3D','规则已确认，按 3D 路线编排三步调用：Tripo 建模与材质，已注册的 Blender 脚本完成动作和渲染。'],
+ ['normal','正常 · 视频','同一资产走视频路线：主体参考图 → 首尾关键帧 → 视频生成与合成。路线由需求说明决定，Agent 只在固定步骤里填参数。'],
+ ['religious','违规 · 替代','审核发现材质中出现禁用宗教标记：用文化约束中已批准的替代元素重做材质，复用已通过的几何模型，status 为 substituted。'],
+ ['review','违规 · 转人工','禁用元素是礼物的核心、没有已批准的替代：不编排任何步骤，steps 为空，交人工确认。'],
+ ['stop','熔断 · 停止','程序触发断路器后不再交回报告重试：Agent 返回 stop，不得自行换编号或清零版本。']
+];
+const tabsEl=$('#pa-example-tabs');
+function showExample(key){const tab=exampleTabs.find(t=>t[0]===key);$('#pa-example-display').innerHTML=jsonMarkup(window.ANSWER.examples[key]);$('#pa-example-caption').textContent=tab[2];for(const b of tabsEl.children){const on=b.dataset.key===key;b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;}}
+for(const[key,label]of exampleTabs){const b=document.createElement('button');b.type='button';b.role='tab';b.dataset.key=key;b.textContent=label;b.className=key==='threeD'||key==='normal'?'is-ok':key==='stop'?'is-stop':'is-warn';b.onclick=()=>showExample(key);tabsEl.append(b);}
+tabsEl.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight'].includes(e.key))return;e.preventDefault();const list=[...tabsEl.children],i=list.indexOf(document.activeElement),next=list[(i+(e.key==='ArrowRight'?1:-1)+list.length)%list.length];next.focus();next.click();});
+showExample('threeD');
+const reportEl=$('#pa-report-display');
+if(reportEl){const raw=JSON.stringify(window.ANSWER.review,null,2);reportEl.innerHTML=esc(raw).replace(/(&quot;(?:[^&]|&(?!quot;))*?&quot;)(\s*:)?/g,(m,s,k)=>`<span class="${k?'pa-json-key':'pa-json-string'}">${s}</span>${k||''}`).replace(/(<span class="pa-json-string">&quot;)(GEO_SELF_INTERSECT|fail)(&quot;<\/span>)/g,'<span class="pa-json-flag">$1$2$3</span>');}
 })();

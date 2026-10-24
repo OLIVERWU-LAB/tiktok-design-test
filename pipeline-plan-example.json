@@ -1,0 +1,70 @@
+{
+  "task_id": "地区01-资产001",
+  "asset_version": "v1",
+  "policy_version": "规则v1",
+  "route": "3d",
+  "status": "ready",
+  "reason": "按已确认的需求与文化规则制作。",
+  "steps": [
+    {
+      "id": "mesh",
+      "tool": "tripo.text_to_model",
+      "depends_on": [],
+      "inputs": [
+        "brief:当前资产需求"
+      ],
+      "prompt": "生成闭合礼盒模型，盒盖与盒身分离。",
+      "negative_terms": [
+        "禁用宗教标记A"
+      ],
+      "settings": {
+        "face_limit": 20000,
+        "texture": false
+      },
+      "model_ref": "tripo/v3.0-20250812"
+    },
+    {
+      "id": "material",
+      "tool": "tripo.texture_model",
+      "depends_on": [
+        "mesh"
+      ],
+      "inputs": [
+        "$mesh.output"
+      ],
+      "prompt": "按批准纹样制作白色哑光材质。",
+      "negative_terms": [
+        "禁用宗教标记A"
+      ],
+      "settings": {
+        "pbr": true,
+        "texture_quality": "standard"
+      },
+      "model_ref": "tripo/v3.0-20250812"
+    },
+    {
+      "id": "motion",
+      "tool": "blender.animate_render",
+      "depends_on": [
+        "material"
+      ],
+      "inputs": [
+        "$material.output"
+      ],
+      "prompt": null,
+      "negative_terms": [],
+      "settings": {
+        "preset_ref": "approved_box_open_v1",
+        "duration_s": 3
+      },
+      "model_ref": null
+    }
+  ],
+  "repair": null,
+  "compliance": {
+    "rule_ids": [
+      "禁用规则01"
+    ],
+    "substitutions": []
+  }
+}
