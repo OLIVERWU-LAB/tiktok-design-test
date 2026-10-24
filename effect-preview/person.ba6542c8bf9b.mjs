@@ -1,4 +1,4 @@
-import {collide} from './core.mjs';
+import {collide} from './core.9f0c3318f3ee.mjs';
 
 // User-provided Subtract.svg; preserve its path and even-odd cutouts.
 // The collision boundary is sampled from the same SVG and upper-body crop.

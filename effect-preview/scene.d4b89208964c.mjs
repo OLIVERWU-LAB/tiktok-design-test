@@ -1,23 +1,22 @@
-import {StickerWorld} from './effects.2cda17a26246.mjs';
-import {RefinedCinemaRenderer} from './cinema-refined-renderer.mjs';
-import {GiftRenderer} from './gift-renderer.e7f9e20d819c.mjs';
-import {ACTIVE_FLAT_PATTERNS,drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.e56b645aeaa1.mjs';
-import {drawLineRain,drawFlatRain} from './rain-style.mjs';
-import {fitFlatViewport} from './flat-budget.166165dc74a9.mjs';
-import {planBurst} from './pyro.mjs';
-import {drawWaterSurface} from './water-renderer.mjs';
-import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.ec779af95302.mjs';
+import {StickerWorld} from './effects.78d56b3ea0d6.mjs';
+import {RefinedCinemaRenderer} from './cinema-refined-renderer.af98e30cac2e.mjs';
+import {GiftRenderer} from './gift-renderer.1d30ec3e84f5.mjs';
+import {drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.3ab473267404.mjs';
+import {drawLineRain,drawFlatRain} from './rain-style.3d766a8d57e0.mjs';
+import {planLiveFirework,fireworkLaunchBusy,fireworkLaunchGap} from './firework-playback.ad1fe5e89636.mjs';
+import {drawWaterSurface} from './water-renderer.d4d29be89ee2.mjs';
+import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.ba6542c8bf9b.mjs';
 
 export const PREVIEW_SIZE=576;
 export const PREVIEW_WIDTH=960;
 export function seededRandom(seed){return()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);}
 let sharedGiftRenderer;
 
-// Same particle factories and drawing code as the final Demo. No camera,
+// Same launch placement, continuous cadence, particle factories and drawing code as the final Demo. No camera,
 // recognition, audio, WebGL context or full-screen renderer is instantiated.
 export class PreviewScene{
  constructor(style,{mode='fireworks',pattern=null}={}){
-  this.style=style;this.cycle=0;this.mode=mode;this.pattern=pattern;this.age=0;
+  this.style=style;this.mode=mode;this.pattern=pattern;this.age=0;
   this.seed={cinema:321,gift:79,flat:86}[style];
   this.zoom=1;
   this.anchorY=PREVIEW_SIZE*(style==='gift'?.27:.28);
@@ -27,9 +26,9 @@ export class PreviewScene{
   this.reset(mode);
  }
  async prepare(){const [,gift]=await Promise.all([preparePreviewPerson(),this.style==='gift'?this.renderer.load('random'):true]);if(!gift)throw new Error('Gift preview unavailable');}
- get duration(){return this.mode==='rain'?8:this.style==='cinema'?4.6:3.6;}
+ get duration(){return this.mode==='rain'?8:18;}
  reset(mode=this.mode){
-  this.mode=mode;this.age=0;this.launched=false;
+  this.mode=mode;this.age=0;this.elapsed=0;this.launchIndex=0;this.nextLaunchAt=.1;this.timingRandom=seededRandom(this.seed+123);
   this.zoom=1;
   this.person=previewPersonGeometry(this.zoom,PREVIEW_WIDTH*.5,this.anchorY);
   // Recreate simulation state, keeping decoded images and drawing caches.
@@ -39,27 +38,20 @@ export class PreviewScene{
   this.world.setEffect(mode==='rain'?'smile':'laugh');
   this.world.viewport={width:PREVIEW_WIDTH,height:PREVIEW_SIZE};
   this.world.head=this.person.head;
-  this.world.pattern=this.pattern||(this.style==='cinema'?'cinema-refined':this.style==='gift'?'gift-twinkle':ACTIVE_FLAT_PATTERNS[this.cycle%ACTIVE_FLAT_PATTERNS.length]);
+  this.world.pattern=this.pattern||(this.style==='cinema'?'cinema-refined':this.style==='gift'?'gift-twinkle':'auto');
  }
  seek(time){
   const target=Math.max(0,Math.min(this.duration-1/120,time));this.reset();
   for(let t=0;t<target-1e-8;){const dt=Math.min(1/60,target-t);this.update(dt);t+=dt;}
  }
  update(dt){
-  this.age+=dt;
-  if(this.mode==='rain'){this.world.rain(dt,PREVIEW_WIDTH,PREVIEW_SIZE,.38);this.age%=this.duration;}
-  else{
-   if(!this.launched&&this.age>=.1){
-    const scale=this.style==='flat'?.49:this.style==='gift'?.64:.60;
-    if(this.style==='flat'){
-     const plan=planBurst(PREVIEW_WIDTH,PREVIEW_SIZE,this.world.head,0,seededRandom(this.seed+123));
-     plan.scale=Math.min(plan.scale,scale);
-     const layout=fitFlatViewport(plan,PREVIEW_WIDTH,PREVIEW_SIZE,this.world.head);
-     if(layout)this.world.launch(layout.x,layout.y,PREVIEW_WIDTH,PREVIEW_SIZE,layout.scale,layout);
-    }else this.world.launch(PREVIEW_WIDTH*.5,this.anchorY,PREVIEW_WIDTH,PREVIEW_SIZE,scale);
-    this.launched=true;
-   }
-   if(this.age>this.duration){this.cycle++;this.reset();}
+  this.elapsed+=dt;this.age=(this.age+dt)%this.duration;
+  if(this.mode==='rain')this.world.rain(dt,PREVIEW_WIDTH,PREVIEW_SIZE,.38);
+  else if(this.elapsed>=this.nextLaunchAt&&!fireworkLaunchBusy(this.world)){
+   const layout=planLiveFirework(this.world,PREVIEW_WIDTH,PREVIEW_SIZE,this.world.head,this.launchIndex,this.timingRandom);
+   if(layout&&this.world.launch(layout.x,layout.y,PREVIEW_WIDTH,PREVIEW_SIZE,layout.scale,layout)){
+    this.launchIndex++;this.nextLaunchAt=this.elapsed+fireworkLaunchGap(this.style,this.timingRandom)/1000;
+   }else this.nextLaunchAt=this.elapsed+.16;
   }
   this.world.update(dt,PREVIEW_WIDTH,PREVIEW_SIZE,this.person);
   // Audio events have no consumer in a silent preview; never retain a queue.

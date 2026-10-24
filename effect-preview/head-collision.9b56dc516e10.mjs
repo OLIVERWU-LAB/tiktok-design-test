@@ -1,5 +1,5 @@
-import {clamp,collide} from './core.mjs';
-import {burstIsSafe} from './pyro.mjs';
+import {clamp,collide} from './core.9f0c3318f3ee.mjs';
+import {burstIsSafe} from './pyro.80ba79a7b8c4.mjs';
 // Supplement the person mask with the tracked hair/head envelope. A swept
 // ellipse test catches thin or delayed segmentation edges, including fast stars.
 export function withHeadCollider(body,head){

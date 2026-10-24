@@ -8,7 +8,7 @@ if(root){
   progress:el.querySelector('[data-preview-progress]'),label:el.querySelector('img').alt,
  }));
  let frame=0,library;
- const module=()=>library??=import('./effect-preview/scene.6aab4299fce4.mjs');
+ const module=()=>library??=import('./effect-preview/scene.d4b89208964c.mjs');
  const active=c=>c.visible&&c.scene&&!c.failed&&!c.paused&&!c.scrubbing&&!c.pendingSeek;
  const runnable=()=>!document.hidden&&cards.some(active);
  function schedule(){if(!frame&&runnable())frame=requestAnimationFrame(tick);}
@@ -40,7 +40,7 @@ if(root){
    try{
     const {PreviewScene}=await module(),scene=new PreviewScene(c.el.dataset.previewStyle,{mode:c.el.dataset.previewMode,pattern:c.el.dataset.previewPattern||null});
     await scene.prepare();
-    for(let i=0;i<(scene.mode==='rain'?20:60);i++)scene.update(1/60);
+    if(scene.mode==='rain')for(let i=0;i<20;i++)scene.update(1/60);
     c.scene=scene;c.accumulator=0;draw(c);return scene;
    }catch{
     c.scene=null;c.failed=true;c.el.querySelector('[data-preview-retry]').hidden=false;return null;

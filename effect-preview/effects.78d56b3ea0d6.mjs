@@ -1,18 +1,18 @@
-import {thinFlat,prioritizeFlat,markPortraitFlat} from './flat-budget.166165dc74a9.mjs';
-import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.47d68a70397e.mjs';
-import{thinCinema,interleaveCinema}from'./particle-quality.mjs';
-import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.mjs';
-import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.mjs';
-import {contactRain,lineRainEntry,rainRate,portraitRainScale} from './rain-style.mjs';
-import {handShell,handRing} from './handglow-particles.mjs';
-import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.e56b645aeaa1.mjs';
-import {withHeadCollider,resolveBurstPoint} from './head-collision.mjs';
-import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.aa5a64c83fe9.mjs';
-import {GIFT_COLORS,giftMaterial,giftSplash,giftLaunchOrigin,giftConfetti} from './gift-style.mjs';
-import { clamp, collide, coverPoint } from './core.mjs';
-import {chooseColors,roundColor} from './dandelion.mjs';
-import {bouquetShell,poppingFlower,innerCrownParticles} from './bouquet.mjs';
-import { SHELLS, PATTERNS, ACTIVE_PATTERNS, STAGED_PATTERNS, STICKER_PATTERN_BAG, rocketPoint, shellParticles, crossetteChildren, burstIsSafe, boundsDistance } from './pyro.mjs';
+import {thinFlat,prioritizeFlat,markPortraitFlat} from './flat-budget.ffdd22f6f4f2.mjs';
+import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.379f6df760ed.mjs';
+import{thinCinema,interleaveCinema}from'./particle-quality.87e837f1b8c3.mjs';
+import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.0705630f4b25.mjs';
+import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.7a7285039b04.mjs';
+import {contactRain,lineRainEntry,rainRate,portraitRainScale} from './rain-style.3d766a8d57e0.mjs';
+import {handShell,handRing} from './handglow-particles.133cedb7d572.mjs';
+import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.3ab473267404.mjs';
+import {withHeadCollider,resolveBurstPoint} from './head-collision.9b56dc516e10.mjs';
+import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.18da71f58a33.mjs';
+import {GIFT_COLORS,giftMaterial,giftSplash,giftLaunchOrigin,giftConfetti} from './gift-style.9d5f8a2e2357.mjs';
+import { clamp, collide, coverPoint } from './core.9f0c3318f3ee.mjs';
+import {chooseColors,roundColor} from './dandelion.a409132287cd.mjs';
+import {bouquetShell,poppingFlower,innerCrownParticles} from './bouquet.fc9030328ba2.mjs';
+import { SHELLS, PATTERNS, ACTIVE_PATTERNS, STAGED_PATTERNS, STICKER_PATTERN_BAG, rocketPoint, shellParticles, crossetteChildren, burstIsSafe, boundsDistance } from './pyro.80ba79a7b8c4.mjs';
 
 export class WaterSurface {
   constructor() { this.level = 0; this.y = new Float32Array(64); this.v = new Float32Array(64); }
@@ -341,7 +341,7 @@ export class StickerWorld {
       if(p.type!=='drop')p.vx+=(p.drift||0)*step;
       p.x += p.vx * step; p.y += p.vy * step; p.angle += (p.spin || 0) * step;
       const impactVX = p.vx, impactVY = p.vy;
-      const collision = !(p.flatFx&&p.flatRole==='ring')&&!p.giftSplash&&!p.noRecollision&&(p.type==='drop'||(!p.hasCollided&&((p.referenceGift&&!p.secondary)||(p.vy>0&&p.wallAge>=(p.collisionDelay||0))))) && p.touched === 0 && (collider?.collide ? collider.collide(p, old) : collide(p, old, collider, velocity));
+      const collision = !(p.flatFx&&p.flatRole==='ring')&&!p.giftSplash&&!p.noRecollision&&(p.type==='drop'||(!p.hasCollided&&((p.referenceGift&&!p.secondary)||p.cinematic||(p.vy>0&&p.wallAge>=(p.collisionDelay||0))))) && p.touched === 0 && (collider?.collide ? collider.collide(p, old) : collide(p, old, collider, velocity));
       if (collision) {
         this.collisions++;if(p.hitRegion==='head')this.headCollisions++;p.hitAge=0; p.touched = .20;
         if(p.trail){this.keepTrail(p,.35);p.trail.length=0;}
