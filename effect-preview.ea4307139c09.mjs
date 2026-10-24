@@ -8,13 +8,13 @@ if(root){
   progress:el.querySelector('[data-preview-progress]'),label:el.querySelector('img').alt,
  }));
  let frame=0,library;
- const module=()=>library??=import('./effect-preview/scene.bc979767495e.mjs');
+ const module=()=>library??=import('./effect-preview/scene.bd6cdfe2309e.mjs');
  const active=c=>c.visible&&c.scene&&!c.failed&&!c.paused&&!c.scrubbing&&!c.pendingSeek;
  const runnable=()=>!document.hidden&&cards.some(active);
  function schedule(){if(!frame&&runnable())frame=requestAnimationFrame(tick);}
  function stop(){if(frame)cancelAnimationFrame(frame);frame=0;for(const c of cards)c.last=0;}
  function resize(c){
-  const pixels=Math.max(1,Math.round(c.canvas.getBoundingClientRect().width*Math.min(devicePixelRatio||1,1.35))),height=Math.max(1,Math.round(pixels*.75));
+  const pixels=Math.max(1,Math.round(c.canvas.getBoundingClientRect().width*Math.min(devicePixelRatio||1,1.35))),height=Math.max(1,Math.round(pixels*.6));
   if(c.canvas.width!==pixels||c.canvas.height!==height){c.canvas.width=pixels;c.canvas.height=height;}
  }
  function sync(c){
@@ -28,7 +28,7 @@ if(root){
   }
  }
  function draw(c){
-  resize(c);const g=c.canvas.getContext('2d');g.setTransform(c.canvas.width/960,0,0,c.canvas.height/720,0,0);c.scene.draw(g);
+  resize(c);const g=c.canvas.getContext('2d');g.setTransform(c.canvas.width/960,0,0,c.canvas.height/576,0,0);c.scene.draw(g);
   c.el.classList.add('has-animation');sync(c);
  }
  function load(c,force=false){

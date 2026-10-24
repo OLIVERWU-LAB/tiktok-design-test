@@ -1,9 +1,3 @@
-# Preview asset sources
+# Preview silhouette
 
-## Standing person silhouette
-
-- Author: pitr
-- Source: https://commons.wikimedia.org/wiki/File:Man_standing_silhouette.svg
-- Original: https://upload.wikimedia.org/wikipedia/commons/d/d0/Man_standing_silhouette.svg
-- License: CC0 1.0, https://creativecommons.org/publicdomain/zero/1.0/
-- Adaptation: metadata removed, traced outline simplified and coordinate precision reduced, neutral recoloring and upper-body camera crop. Collision outline derived from the same path, simplified for the preview collision budget. No photographic raster is shipped.
+The current person silhouette is the user-supplied Subtract.svg. Its path data and even-odd cutouts are retained. The fill is a uniform #444444 on a #000000 background; the figure is placed at the bottom centre of a 5:3 frame to match the supplied composition reference. The previous third-party silhouette has been replaced.

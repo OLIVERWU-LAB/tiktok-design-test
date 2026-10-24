@@ -1,12 +1,12 @@
-import {StickerWorld} from './effects.mjs';
+import {StickerWorld} from './effects.98a86cdd31ef.mjs';
 import {RefinedCinemaRenderer} from './cinema-refined-renderer.mjs';
 import {GiftRenderer} from './gift-renderer.mjs';
 import {ACTIVE_FLAT_PATTERNS,drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.mjs';
 import {drawLineRain,drawFlatRain} from './rain-style.mjs';
 import {drawWaterSurface} from './water-renderer.mjs';
-import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.2b16e66adeea.mjs';
+import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.e8ad849f792f.mjs';
 
-export const PREVIEW_SIZE=720;
+export const PREVIEW_SIZE=576;
 export const PREVIEW_WIDTH=960;
 export function seededRandom(seed){return()=>((seed=Math.imul(seed,1664525)+1013904223>>>0)/4294967296);}
 let sharedGiftRenderer;
@@ -18,7 +18,7 @@ export class PreviewScene{
   this.style=style;this.cycle=0;this.mode=mode;this.pattern=pattern;this.age=0;
   this.seed={cinema:321,gift:79,flat:86}[style];
   this.zoom=1;
-  this.anchorY=PREVIEW_SIZE*(style==='gift'?.27:style==='flat'?.28:.24);
+  this.anchorY=PREVIEW_SIZE*(style==='gift'?.27:.28);
   this.person=previewPersonGeometry(this.zoom,PREVIEW_WIDTH*.5,this.anchorY);
   this.background={particles:[]};this.foreground={particles:[]};
   this.renderer=style==='cinema'?new RefinedCinemaRenderer():style==='gift'?(sharedGiftRenderer??=new GiftRenderer()):null;
@@ -48,7 +48,7 @@ export class PreviewScene{
   if(this.mode==='rain'){this.world.rain(dt,PREVIEW_WIDTH,PREVIEW_SIZE,.38);this.age%=this.duration;}
   else{
    if(!this.launched&&this.age>=.1){
-    const scale=this.style==='flat'?.49:this.style==='gift'?.64:.78;
+    const scale=this.style==='flat'?.49:this.style==='gift'?.64:.60;
     this.world.launch(PREVIEW_WIDTH*.5,this.anchorY,PREVIEW_WIDTH,PREVIEW_SIZE,scale);
     this.launched=true;
    }
@@ -61,7 +61,7 @@ export class PreviewScene{
  draw(g){
   const world=this.world;
   g.save();g.globalAlpha=1;g.globalCompositeOperation='source-over';
-  g.fillStyle='#0b0c10';g.fillRect(0,0,PREVIEW_WIDTH,PREVIEW_SIZE);
+  g.fillStyle='#000000';g.fillRect(0,0,PREVIEW_WIDTH,PREVIEW_SIZE);
   if(this.style==='flat'){
    this.background.particles.length=0;this.foreground.particles.length=0;
    for(const p of world.particles)(p.backgroundOnly?this.background:this.foreground).particles.push(p);

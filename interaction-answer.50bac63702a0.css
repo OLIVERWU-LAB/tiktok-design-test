@@ -31,7 +31,7 @@
 #part2 .effect-preview-group h4>span{font-size:15px;color:#1034ce}
 #part2 .effect-preview-grid{display:grid;width:100%;max-width:none;justify-items:stretch;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
 #part2 .effect-preview-card{width:100%;max-width:none;min-width:0;margin:0;background:transparent;border-radius:0;overflow:visible;box-shadow:none}
-#part2 .effect-preview-stage{position:relative;aspect-ratio:4/3;background:#0b0c10;overflow:hidden;border-radius:12px}
+#part2 .effect-preview-stage{position:relative;aspect-ratio:5/3;background:#000000;overflow:hidden;border-radius:12px}
 #part2 .effect-preview-stage img,#part2 .effect-preview-stage canvas{display:block;position:absolute;inset:0;width:100%;height:100%;object-fit:contain}
 #part2 .effect-preview-stage canvas{opacity:0}
 #part2 .has-animation canvas{opacity:1}

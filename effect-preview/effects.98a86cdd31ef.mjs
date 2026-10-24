@@ -263,7 +263,7 @@ export class StickerWorld {
   update(dt, width, height, collider, velocity) {
     dt = clamp(dt, 0, .05);const particleRate=this.effect==='laugh'?(this.style==='gift'?1.35:this.style==='flat'?1.14:!(['cinema','glow'].includes(this.style)&&referencePattern(this.style,this.lastPattern))?1.20:1):1,particleDT=dt*particleRate;
     this.simulationTime+=particleDT;
-    if(this.head&&(this.style==='gift'||['cinema','glow'].includes(this.style)||this.style==='flat'))collider=withHeadCollider(collider,this.head);
+    if(this.head&&!collider?.exactOutline&&(this.style==='gift'||['cinema','glow'].includes(this.style)||this.style==='flat'))collider=withHeadCollider(collider,this.head);
     for(const tail of this.afterglows)tail.life-=particleDT;
     this.afterglows=this.afterglows.filter(t=>t.life>0);
     for(const launcher of this.launchers)launcher.age+=dt;
