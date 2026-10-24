@@ -4,7 +4,7 @@ import {GiftRenderer} from './gift-renderer.mjs';
 import {ACTIVE_FLAT_PATTERNS,drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.mjs';
 import {drawLineRain,drawFlatRain} from './rain-style.mjs';
 import {drawWaterSurface} from './water-renderer.mjs';
-import {drawPreviewPerson,previewPersonGeometry} from './person.d56fa905ba44.mjs';
+import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.2b16e66adeea.mjs';
 
 export const PREVIEW_SIZE=720;
 export const PREVIEW_WIDTH=960;
@@ -17,18 +17,18 @@ export class PreviewScene{
  constructor(style,{mode='fireworks',pattern=null}={}){
   this.style=style;this.cycle=0;this.mode=mode;this.pattern=pattern;this.age=0;
   this.seed={cinema:321,gift:79,flat:86}[style];
-  this.zoom=mode==='fireworks'?(style==='gift'?1.40:style==='flat'?1.35:1):1;
-  this.anchorY=PREVIEW_SIZE*(style==='gift'?.34:.40);
+  this.zoom=1;
+  this.anchorY=PREVIEW_SIZE*(style==='gift'?.27:style==='flat'?.28:.24);
   this.person=previewPersonGeometry(this.zoom,PREVIEW_WIDTH*.5,this.anchorY);
   this.background={particles:[]};this.foreground={particles:[]};
   this.renderer=style==='cinema'?new RefinedCinemaRenderer():style==='gift'?(sharedGiftRenderer??=new GiftRenderer()):null;
   this.reset(mode);
  }
- async prepare(){if(this.style==='gift'&&!await this.renderer.load('random'))throw new Error('Gift preview unavailable');}
+ async prepare(){const [,gift]=await Promise.all([preparePreviewPerson(),this.style==='gift'?this.renderer.load('random'):true]);if(!gift)throw new Error('Gift preview unavailable');}
  get duration(){return this.mode==='rain'?8:this.style==='cinema'?4.6:3.6;}
  reset(mode=this.mode){
   this.mode=mode;this.age=0;this.launched=false;
-  this.zoom=mode==='fireworks'?(this.style==='gift'?1.40:this.style==='flat'?1.35:1):1;
+  this.zoom=1;
   this.person=previewPersonGeometry(this.zoom,PREVIEW_WIDTH*.5,this.anchorY);
   // Recreate simulation state, keeping decoded images and drawing caches.
   // A cleared world retains timing/history fields, which would shift a seek.
@@ -48,8 +48,8 @@ export class PreviewScene{
   if(this.mode==='rain'){this.world.rain(dt,PREVIEW_WIDTH,PREVIEW_SIZE,.38);this.age%=this.duration;}
   else{
    if(!this.launched&&this.age>=.1){
-    const scale=this.style==='flat'?.68:this.style==='gift'?.86:1.12;
-    this.world.launch(PREVIEW_WIDTH*.5,PREVIEW_SIZE*(this.style==='cinema'?.42:this.style==='flat'?.40:.34),PREVIEW_WIDTH,PREVIEW_SIZE,scale);
+    const scale=this.style==='flat'?.49:this.style==='gift'?.64:.78;
+    this.world.launch(PREVIEW_WIDTH*.5,this.anchorY,PREVIEW_WIDTH,PREVIEW_SIZE,scale);
     this.launched=true;
    }
    if(this.age>this.duration){this.cycle++;this.reset();}
