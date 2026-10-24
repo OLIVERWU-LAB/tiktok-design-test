@@ -1,13 +1,13 @@
-import {thinFlat,prioritizeFlat,markPortraitFlat} from './flat-budget.mjs';
-import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.mjs';
+import {thinFlat,prioritizeFlat,markPortraitFlat} from './flat-budget.166165dc74a9.mjs';
+import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.47d68a70397e.mjs';
 import{thinCinema,interleaveCinema}from'./particle-quality.mjs';
 import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.mjs';
 import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.mjs';
 import {contactRain,lineRainEntry,rainRate,portraitRainScale} from './rain-style.mjs';
 import {handShell,handRing} from './handglow-particles.mjs';
-import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.mjs';
+import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.e56b645aeaa1.mjs';
 import {withHeadCollider,resolveBurstPoint} from './head-collision.mjs';
-import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.mjs';
+import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.aa5a64c83fe9.mjs';
 import {GIFT_COLORS,giftMaterial,giftSplash,giftLaunchOrigin,giftConfetti} from './gift-style.mjs';
 import { clamp, collide, coverPoint } from './core.mjs';
 import {chooseColors,roundColor} from './dandelion.mjs';
@@ -341,7 +341,7 @@ export class StickerWorld {
       if(p.type!=='drop')p.vx+=(p.drift||0)*step;
       p.x += p.vx * step; p.y += p.vy * step; p.angle += (p.spin || 0) * step;
       const impactVX = p.vx, impactVY = p.vy;
-      const collision = !(p.flatFx&&p.flatRole==='ring')&&!p.giftSplash&&!p.noRecollision&&(p.type==='drop'||(!p.hasCollided&&p.vy>0&&p.wallAge>=(p.collisionDelay||0))) && p.touched === 0 && (collider?.collide ? collider.collide(p, old) : collide(p, old, collider, velocity));
+      const collision = !(p.flatFx&&p.flatRole==='ring')&&!p.giftSplash&&!p.noRecollision&&(p.type==='drop'||(!p.hasCollided&&((p.referenceGift&&!p.secondary)||(p.vy>0&&p.wallAge>=(p.collisionDelay||0))))) && p.touched === 0 && (collider?.collide ? collider.collide(p, old) : collide(p, old, collider, velocity));
       if (collision) {
         this.collisions++;if(p.hitRegion==='head')this.headCollisions++;p.hitAge=0; p.touched = .20;
         if(p.trail){this.keepTrail(p,.35);p.trail.length=0;}

@@ -4,7 +4,7 @@ import {loadGiftImage} from './gift-loader.mjs';
 import {mixHex} from './emission.mjs';
 import {particleVisibility} from './particle-visibility.mjs';
 import {GIFT_MATERIALS,GIFT_RANDOM_MATERIALS} from './gift-materials.mjs';
-import {giftBeadEnvelope} from './reference-bursts.mjs';
+import {giftBeadEnvelope} from './reference-bursts.aa5a64c83fe9.mjs';
 import {clamp} from './core.mjs';
 import {GIFT_KINDS,GIFT_COLORS,giftMaterial,giftSplashEnvelope,giftFlashEnvelope,drawGiftConfetti} from './gift-style.mjs';
 const TAU=Math.PI*2;

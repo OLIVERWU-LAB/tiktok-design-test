@@ -1,10 +1,12 @@
-import {StickerWorld} from './effects.98a86cdd31ef.mjs';
+import {StickerWorld} from './effects.2cda17a26246.mjs';
 import {RefinedCinemaRenderer} from './cinema-refined-renderer.mjs';
-import {GiftRenderer} from './gift-renderer.mjs';
-import {ACTIVE_FLAT_PATTERNS,drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.mjs';
+import {GiftRenderer} from './gift-renderer.e7f9e20d819c.mjs';
+import {ACTIVE_FLAT_PATTERNS,drawFlatFireworks,drawFlatLaunch} from './flat-fireworks.e56b645aeaa1.mjs';
 import {drawLineRain,drawFlatRain} from './rain-style.mjs';
+import {fitFlatViewport} from './flat-budget.166165dc74a9.mjs';
+import {planBurst} from './pyro.mjs';
 import {drawWaterSurface} from './water-renderer.mjs';
-import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.e8ad849f792f.mjs';
+import {drawPreviewPerson,previewPersonGeometry,preparePreviewPerson} from './person.ec779af95302.mjs';
 
 export const PREVIEW_SIZE=576;
 export const PREVIEW_WIDTH=960;
@@ -49,7 +51,12 @@ export class PreviewScene{
   else{
    if(!this.launched&&this.age>=.1){
     const scale=this.style==='flat'?.49:this.style==='gift'?.64:.60;
-    this.world.launch(PREVIEW_WIDTH*.5,this.anchorY,PREVIEW_WIDTH,PREVIEW_SIZE,scale);
+    if(this.style==='flat'){
+     const plan=planBurst(PREVIEW_WIDTH,PREVIEW_SIZE,this.world.head,0,seededRandom(this.seed+123));
+     plan.scale=Math.min(plan.scale,scale);
+     const layout=fitFlatViewport(plan,PREVIEW_WIDTH,PREVIEW_SIZE,this.world.head);
+     if(layout)this.world.launch(layout.x,layout.y,PREVIEW_WIDTH,PREVIEW_SIZE,layout.scale,layout);
+    }else this.world.launch(PREVIEW_WIDTH*.5,this.anchorY,PREVIEW_WIDTH,PREVIEW_SIZE,scale);
     this.launched=true;
    }
    if(this.age>this.duration){this.cycle++;this.reset();}
