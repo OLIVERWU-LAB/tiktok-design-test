@@ -14,7 +14,6 @@
 #part1 .pa-safety-config input{width:64px;flex:0 0 64px}
 @media(max-width:650px){#part3 .rank-score .expand-label{gap:4px;padding:6px;margin-right:-6px}}
 
-/* Large, quiet ordinals are clipped by each card and sit behind its content. */
-#part1 .pa-agent-grid .pa-card-body{position:relative;isolation:isolate;overflow:hidden}
-#part1 .pa-agent-grid .pa-card-body>:not(.pa-agent-ordinal){position:relative;z-index:1}
-#part1 .pa-agent-grid .pa-card-body .pa-agent-ordinal{position:absolute;right:-.12em;bottom:-.23em;z-index:0;display:flex;align-items:center;justify-content:center;width:.72em;height:1em;font:700 clamp(160px,16vw,210px)/1 Arial,"Helvetica Neue",sans-serif;font-variant-numeric:tabular-nums;font-feature-settings:"tnum";letter-spacing:0;color:#1034ce;opacity:.08;pointer-events:none;user-select:none}
+/* Agent overview: a small shared heading, followed by unboxed prose. */
+#part1 .pa-agent-heading{margin:28px 0 18px;font:20px/1.6 var(--title);color:#222}
+#part1 .pa-architecture-copy{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
