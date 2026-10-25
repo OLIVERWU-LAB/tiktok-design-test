@@ -146,10 +146,10 @@
    </div></section>
   </div>
   <div class="pa-section-heading pa-question-heading rating-subheading"><h3>复盘</h3></div>
-  <div class="pa-answer-prose interaction-review" aria-label="189字复盘，含核心纠偏提示词">
-   <p>AI把单测通过误当作浏览器可靠性保证：为优化切页恢复重构计时器，却因原生调用上下文错误卡死；又用轻量模型提速，造成识别迟钝和轮廓锯齿。</p>
+  <div class="pa-answer-prose interaction-review" aria-label="187字复盘，含核心纠偏提示词">
+   <p>为让用户切换页面后还能继续体验，我让AI优化摄像头与识别的恢复，却导致返回页面后卡在“加载识别组件”；之后尝试用轻量模型提速，又造成表情识别迟钝、人物轮廓锯齿。</p>
    <p class="interaction-prompt-label">核心Prompt（据反馈提炼）：</p>
-   <blockquote>“先停改功能，记录启动步骤与异常，修正原生计时器接收者；复测首开、切页返回及重试。恢复原模型、表情阈值和轮廓精度，禁止降低识别质量提速；仅做无损压缩、图集复用与推理渲染解耦，逐项核验微笑、大笑、头发及手部碰撞。”</blockquote>
+   <blockquote>“先停止加功能，记录加载步骤和报错，查清卡死原因；修复后实测首次打开、切页返回和重试。恢复原识别模型和轮廓精度，不用降低识别质量换速度；只压缩资源、复用素材，让识别与动画分别运行。”</blockquote>
   </div>
  </section>
  <section id="part3" class="part-section rating-section">
