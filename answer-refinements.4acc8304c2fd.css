@@ -19,3 +19,13 @@
 #part1 .pa-architecture-copy{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
 
 #part3 .rank-info .image-id{display:block;font:11px/1.6 system-ui,sans-serif;letter-spacing:.3px;color:#686868}
+
+/* Present the assignment, then its answer; keep headings factual. */
+.home-section .intro h1{font-size:clamp(38px,4.1vw,64px);line-height:1.35;letter-spacing:-1.2px;margin:0 0 34px}
+.home-section .test-category{font:26px/1.5 var(--title);color:#18191c;margin:0}
+.part-section>.section-title{font-size:clamp(28px,3vw,42px);line-height:1.45;letter-spacing:-.5px;margin:0 0 24px}
+.assignment-brief,.pa-question-heading>.assignment-question,.review-question{font:14px/1.95 system-ui,sans-serif;color:#454545;max-width:none}
+.assignment-brief{margin:0 0 40px}.assignment-brief>strong{font:17px/1.6 var(--title);color:#18191c;margin-right:5px}
+.assignment-subheading{margin:44px 0 22px}.assignment-subheading h4{font:22px/1.5 var(--title);margin:0;color:#18191c}
+.review-question{margin:-12px 0 24px}
+@media(max-width:650px){.home-section .test-category{font-size:21px}.assignment-brief,.pa-question-heading>.assignment-question,.review-question{font-size:13px}.part-section>.section-title{font-size:28px}.assignment-subheading h4{font-size:20px}}
