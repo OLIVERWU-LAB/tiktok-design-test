@@ -26,7 +26,7 @@ const nodes={
  frames:{x:3960,y:820,type:'tool',route:'video',title:'分镜与关键帧',inputs:inp('image','主体参考图与镜头安排'),body:fields(['任务','按镜头生成关键帧，确定首尾画面与时长。']),outputs:out('frames','分镜与关键帧')+thumbnail('frames','分镜与关键帧')},
  video:{x:4596,y:820,type:'tool',route:'video',title:'视频与合成',inputs:inp('frames','分镜、关键帧与动作提示词'),body:fields(['任务','生成片段并合成，处理透明通道与输出规格。']),outputs:out('candidate','视频成品与源文件')+thumbnail('video','视频与合成')},
  review:{x:5376,y:520,type:'agent',title:'产物质量合规审核',inputs:inp('3d','3D 成品与源文件')+inp('video','视频成品与源文件'),body:fields(['任务','独立对照需求说明、文化约束和规格检测结果，检查实际产物的结构、画面与动作；报告标明问题位置、证据及资产版本。']),outputs:decision('按审核结果',branch('pass','通过','质量、文化合规与交付规格均通过','成品与通过记录 → 打包整理')+branch('fail','拦截','质量、结构或文化合规不达标','问题报告与资产版本'))},
- runtime:{x:6012,y:1420,type:'control',title:'重试与熔断控制',inputs:inp('report','当前资产的不通过报告'),body:fields(['任务','本轮费用结算后，核对当前资产的已用重试次数与累计实际费用。'])+`<div class="pa-fields"><label class="pa-field">单资产重试上限<input id="pa-retry-limit" type="number" min="0" value="3"></label><label class="pa-field">单资产预算（元）<input id="pa-budget" type="number" min="0.01" step="0.01" value="100"></label></div>`,outputs:decision('按控制判定',branch('retry','重试','次数与费用均未达上限','审核问题报告')+branch('halt','触发断路器','次数或费用达到上限','保存审核问题报告记录，交异常人工复核'))},
+ runtime:{x:6012,y:1420,type:'control',title:'重试与熔断控制',inputs:inp('report','当前资产的不通过报告'),body:fields(['任务','结算当前资产的重试次数与实际费用，并累计本批次同地区因文化合规熔断的资产数量。'])+`<div class="pa-fields"><label class="pa-field">单资产重试上限<input id="pa-retry-limit" type="number" min="0" value="3"></label><label class="pa-field">单资产预算（元）<input id="pa-budget" type="number" min="0.01" step="0.01" value="100"></label><label class="pa-field">单地区文化合规熔断资产上限<input id="pa-region-halt-limit" type="number" min="1" step="1" value="3"></label></div>`,outputs:decision('按控制判定',branch('retry','重试','单资产次数与费用均未达上限，且地区未熔断','审核问题报告')+branch('halt','触发断路器','单资产次数、费用或单地区熔断资产数达到上限','保存审核问题报告记录，交异常人工复核'))},
 
  human:{x:6648,y:790,type:'human',title:'设计师',inputs:inp('package','已审核并整理的完整成品包'),body:fields(['任务','验收成品、预览和审核记录。'])},
  exception:{x:6648,y:2340,type:'human',title:'异常人工复核',inputs:inp('halt','审核问题报告记录、历史产物与费用'),body:fields(['任务','设计师与本地化负责人接管处理，自动化在此停止。'])},
@@ -118,11 +118,12 @@ function roleIcon(type){const shapes=type==='agent'?'<rect x="11" y="1" width="2
 let lastPaint=0;function animateCables(time){requestAnimationFrame(animateCables);if(time-lastPaint<32||!visible||document.hidden||reduced.matches||drag||zoomBusy)return;lastPaint=time;for(const[i,e]of edges.entries()){if(e.route&&e.route!==$('#pa-route').value)continue;paintPulse(e,((time*.34+i*173)%(e.length+e.span*2))-e.span);}}requestAnimationFrame(animateCables);
 function setText(selector,value){for(const el of document.querySelectorAll(selector))el.textContent=value;}
 function routeStyles(){const route=$('#pa-route').value;for(const n of Object.values(nodes))if(n.route)n.el.classList.toggle('pa-inactive',n.route!==route);for(const e of edges){const inactive=e.route&&e.route!==route;e.group.classList.toggle('pa-inactive',!!inactive);e.labelEl?.classList.toggle('pa-inactive',!!inactive);}for(const key of ['3d','video']){nodes.review.el.querySelector(`[data-pa-socket="${key}"]`).classList.toggle('pa-inactive',key!==route);}for(const el of document.querySelectorAll('[data-lane-label]')){const active=el.dataset.laneLabel===route;el.classList.toggle('is-active',active);el.querySelector('b').textContent=active?'已启用':'未启用';}}
-const limitPairs=[['pa-retry-limit','pa-safety-retry-limit'],['pa-budget','pa-safety-budget']];
+const limitPairs=[['pa-retry-limit','pa-safety-retry-limit'],['pa-budget','pa-safety-budget'],['pa-region-halt-limit','pa-safety-region-halt-limit']];
 function syncConfig(event){
  const source=event?.target,pair=source&&limitPairs.find(ids=>ids.includes(source.id));
  if(pair&&source.validity.valid){for(const id of pair){const input=document.getElementById(id);if(input!==source)input.value=source.value;}}
  else if(!source){for(const[main,detail]of limitPairs)document.getElementById(detail).value=document.getElementById(main).value;}
+ const regionLimit=document.getElementById('pa-region-halt-limit');if(regionLimit.validity.valid&&regionLimit.value!=='')setText('[data-pa-region-halt-limit]',regionLimit.value);
  const selected=countries.filter(r=>$(`input[name="pa-country"][value="${r.id}"]`).checked).length;
  setText('[data-pa-region-count]',selected);
  routeStyles();measure();

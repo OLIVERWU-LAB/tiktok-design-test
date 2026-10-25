@@ -6,14 +6,24 @@ export function hoverImagePlacement(image,row,viewport){
  const factor=Math.min(2,(viewport.width-inset*2-padding*2)/image.width,(viewport.height-inset*2-padding*2)/image.height);
  const width=image.width*factor+padding*2,height=image.height*factor+padding*2;
  const above=row.top-gap-height,below=row.bottom+gap;
- return {width,height,left:clamp(image.right-width,inset,Math.max(inset,viewport.width-width-inset)),
+ return {width,height,left:clamp((image.left+image.right-width)/2,inset,Math.max(inset,viewport.width-width-inset)),
   top:clamp(above>=inset?above:below+height<=viewport.height-inset?below:above,inset,Math.max(inset,viewport.height-height-inset))};
 }
 
-export function installAnswerInteractions({document,window,root,copyButton,url}){
+// The collapsed thumbnail opens its score card. Only an already open card
+// passes the click through to the existing full-image dialog handler.
+export function handleRankMediaClick(event,row,expand){
+ if(!event.target.closest('[data-enlarge]'))return false;
+ if(row.dataset.expanded!=='true'){
+  event.preventDefault();event.stopPropagation();expand(row,true);
+ }
+ return true;
+}
+
+export function installAnswerInteractions({document,window,root}){
  const popup=document.createElement('div'),image=document.createElement('img');
  popup.className='rank-hover-preview';popup.hidden=true;popup.setAttribute('aria-hidden','true');image.decoding='async';popup.append(image);document.body.append(popup);
- const finePointer=window.matchMedia('(hover: hover) and (pointer: fine)');let owner=null,copyTimer;
+ const finePointer=window.matchMedia('(hover: hover) and (pointer: fine)');let owner=null;
  function hideImagePreview(){popup.hidden=true;owner=null;}
  function showImagePreview(button){
   const row=button.closest('.ranking'),thumbnail=button.querySelector('img');
@@ -35,7 +45,7 @@ export function installAnswerInteractions({document,window,root,copyButton,url})
  });
  root.addEventListener('focusin',event=>{
   const button=event.target.closest('.rank-media');
-  if(button&&(finePointer.matches||button.matches(':focus-visible')))showImagePreview(button);
+  if(button&&button.matches(':focus-visible'))showImagePreview(button);
  });
  root.addEventListener('focusout',hideImagePreview);
  root.addEventListener('pointerdown',hideImagePreview);
@@ -46,23 +56,5 @@ export function installAnswerInteractions({document,window,root,copyButton,url})
  window.addEventListener('keydown',event=>{if(event.key==='Escape')hideImagePreview();});
  finePointer.addEventListener('change',hideImagePreview);
 
- if(copyButton)copyButton.addEventListener('click',async()=>{
-  window.clearTimeout(copyTimer);copyButton.disabled=true;
-  try{
-   try{
-    await window.navigator.clipboard.writeText(url);
-   }catch{
-    const field=document.createElement('textarea'),active=document.activeElement;
-    field.value=url;field.readOnly=true;field.tabIndex=-1;field.style.cssText='position:fixed;top:0;left:-9999px;opacity:0';document.body.append(field);
-    try{field.select();if(!document.execCommand('copy'))throw new Error('Copy failed');}
-    finally{field.remove();active?.focus({preventScroll:true});}
-   }
-   copyButton.textContent='已复制';
-  }catch{copyButton.textContent='复制失败';}
-  finally{
-   copyButton.disabled=false;
-   copyTimer=window.setTimeout(()=>{copyButton.textContent='复制链接';},1800);
-  }
- });
  return {hideImagePreview};
 }

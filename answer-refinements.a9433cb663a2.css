@@ -1,8 +1,0 @@
-/* Part 3: a quiet disclosure hint and an image preview outside the active row. */
-#part3 .ranking>summary .rank-disclosure-hint{position:absolute;left:50%;bottom:0;display:flex;align-items:center;gap:8px;width:max-content;max-width:calc(100% - 32px);padding:9px 24px 8px;transform:translateX(-50%);border-radius:12px 12px 0 0;background:linear-gradient(0deg,#dbe9ffdb,#edf4ff94 65%,#fff0);color:#1034ce;font:11px/1.3 system-ui,sans-serif;white-space:nowrap;opacity:0;transition:opacity .18s ease;pointer-events:none}
-#part3 .ranking:hover>summary .rank-disclosure-hint,#part3 .ranking:focus-within>summary .rank-disclosure-hint{opacity:1}
-.rank-hover-preview{position:fixed;z-index:85;box-sizing:border-box;padding:8px;border-radius:12px;background:#fff;box-shadow:0 12px 42px #18223a26,0 2px 8px #18223a12;pointer-events:none}
-.rank-hover-preview img{display:block;width:100%;height:100%;object-fit:contain;border-radius:6px;background:#f6f6f6}
-@media(hover:hover) and (pointer:fine){#part3 .ranking:not([data-expanded="true"]) .rank-media{cursor:default}#part3 .ranking:not([data-expanded="true"]) .image-enlarge-overlay{display:none}}
-@media(hover:none){#part3 .ranking>summary .rank-disclosure-hint{opacity:1}}
-@media(prefers-reduced-motion:reduce){#part3 .ranking>summary .rank-disclosure-hint{transition:none}}

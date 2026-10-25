@@ -1,0 +1,15 @@
+/* Part 3: a quiet disclosure hint and an image preview outside the active row. */
+#part3 .rank-score .expand-label{display:inline-flex;align-items:center;gap:8px;margin-top:9px;margin-right:-8px;padding:6px 8px;border-radius:7px;background:transparent;color:#686868;transition:background .18s ease,color .18s ease}
+@media(hover:hover) and (pointer:fine){#part3 .ranking:hover>summary .expand-label{background:#eaf0ff;color:#1034ce}}
+#part3 .ranking>summary:focus-visible .expand-label{background:#eaf0ff;color:#1034ce}
+.rank-hover-preview{position:fixed;z-index:85;box-sizing:border-box;padding:8px;border-radius:12px;background:#fff;box-shadow:0 12px 42px #18223a26,0 2px 8px #18223a12;pointer-events:none}
+.rank-hover-preview img{display:block;width:100%;height:100%;object-fit:contain;border-radius:6px;background:#f6f6f6}
+@media(hover:hover) and (pointer:fine){#part3 .ranking:not([data-expanded="true"]) .rank-media{cursor:default}#part3 .ranking:not([data-expanded="true"]) .image-enlarge-overlay{display:none}}
+
+@media(prefers-reduced-motion:reduce){#part3 .rank-score .expand-label{transition:none}}
+
+#part1 .pa-safety-limit-name{display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px;min-width:0;white-space:normal}
+#part1 .pa-safety-limit-name>span:last-child{white-space:nowrap}
+#part1 .pa-safety-config .pa-trigger-scope{flex:none;margin:0;padding:3px 7px;font-size:11px;line-height:1.5}
+#part1 .pa-safety-config input{width:64px;flex:0 0 64px}
+@media(max-width:650px){#part3 .rank-score .expand-label{gap:4px;padding:6px;margin-right:-6px}}
