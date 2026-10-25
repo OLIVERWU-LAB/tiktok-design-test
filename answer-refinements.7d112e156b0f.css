@@ -21,7 +21,7 @@
 #part3 .rank-info .image-id{display:block;font:11px/1.6 system-ui,sans-serif;letter-spacing:.3px;color:#686868}
 
 /* Present the assignment, then its answer; keep headings factual. */
-.home-section .intro h1{font-size:clamp(38px,4.1vw,64px);line-height:1.35;letter-spacing:-1.2px;margin:0 0 34px}
+.home-section .intro h1{font-size:clamp(38px,4.1vw,64px);line-height:1.55;letter-spacing:-1.2px;margin:0 0 34px}
 .home-section .test-category{font:26px/1.5 var(--title);color:#18191c;margin:0}
 .part-section>.section-title{font-size:clamp(28px,3vw,42px);line-height:1.45;letter-spacing:-.5px;margin:0 0 24px}
 .assignment-brief,.pa-question-heading>.assignment-question,.review-question{font:14px/1.95 system-ui,sans-serif;color:#454545;max-width:none}
