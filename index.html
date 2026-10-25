@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000"><meta name="description" content="Oliver Wu · TikTok AI 产品设计测试。自动化管线、笑容互动与图像美学评测。"><title>Oliver Wu — AI Design Test</title><link rel="icon" href="data:,"><link rel="preload" href="assets/fonts/ZaoZiGongFangYuanHeiTi-Regular-web.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="pipeline-integrated.css"><link rel="stylesheet" href="interaction-answer.e48cae3d0aa3.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000"><meta name="description" content="Oliver Wu · TikTok AI 产品设计测试。自动化管线、笑容互动与图像美学评测。"><title>Oliver Wu — AI Design Test</title><link rel="icon" href="data:,"><link rel="preload" href="assets/fonts/ZaoZiGongFangYuanHeiTi-Regular-web.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="pipeline-integrated.css"><link rel="stylesheet" href="interaction-answer.a29625bfa88a.css"><link rel="stylesheet" href="answer-refinements.a9433cb663a2.css"></head>
 <body>
 <a class="skip" href="#main">跳到答卷</a>
 <aside class="sidebar">
@@ -97,10 +97,13 @@
   <h2 class="section-title">表情驱动互动原型</h2>
   <p class="section-lead">微笑触发雨滴，大笑触发烟花，粒子与人物轮廓实时碰撞。</p>
   <div class="interaction-entry-grid" aria-label="第二题体验与源码">
-   <a class="interaction-entry interaction-entry-primary" href="https://oliverwu-lab.github.io/live-expression-effects/" target="_blank" rel="noopener noreferrer">
-    <span class="interaction-entry-title"><span>进入体验</span><span class="interaction-entry-arrow" aria-hidden="true">↗</span></span>
-    <span class="interaction-entry-note">手机与电脑均可打开</span>
-   </a>
+   <div class="interaction-entry-wrap">
+    <a class="interaction-entry interaction-entry-primary" href="https://oliverwu-lab.github.io/live-expression-effects/" target="_blank" rel="noopener noreferrer">
+     <span class="interaction-entry-title"><span class="interaction-entry-heading"><span>进入体验</span><small>三种风格，可切换</small></span><span class="interaction-entry-arrow" aria-hidden="true">↗</span></span>
+     <span class="interaction-entry-note">手机与电脑均可打开</span>
+    </a>
+    <button class="interaction-copy" id="copy-experience" aria-label="复制体验链接" aria-live="polite">复制链接</button>
+   </div>
    <a class="interaction-entry interaction-entry-source" href="https://github.com/OLIVERWU-LAB/live-expression-effects" target="_blank" rel="noopener noreferrer">
     <span class="interaction-entry-title"><span>代码仓库</span><span class="interaction-entry-arrow" aria-hidden="true">↗</span></span>
     <span class="interaction-entry-note">GitHub · Public</span>
@@ -170,13 +173,13 @@
   <div class="pa-section-heading pa-question-heading rating-subheading selection-head"><h3><span>02</span><i aria-hidden="true">/</i>最佳三张</h3><span class="micro-label">点击图片查看依据 ↘</span></div><div id="top-picks" class="picks"></div>
   <div class="pa-section-heading pa-question-heading rating-subheading selection-head"><h3><span>03</span><i aria-hidden="true">/</i>最差三张</h3><span class="micro-label">由低到高</span></div><div id="bottom-picks" class="picks bottom-picks"></div>
   <p class="tie-note">同分保留人工排序，以叙事完整性、情绪表达和缺陷对主体的影响区分先后。</p>
-  <div class="pa-section-heading pa-question-heading rating-subheading rank-heading"><h3><span>04</span><i aria-hidden="true">/</i>完整排序 <small>20 张</small></h3><span class="ranking-guide">点击展开 · 悬停指标查看标准 <span>↓</span></span></div>
+  <div class="pa-section-heading pa-question-heading rating-subheading rank-heading"><h3><span>04</span><i aria-hidden="true">/</i>完整排序 <small>20 张</small></h3></div>
   <div id="rankings" class="rankings"></div>
  </section>
  <footer><span>OLIVER WU <span class="small-dot">/</span> AI PRODUCT DESIGN</span><a href="#top">回到顶部 ↑</a></footer>
 </main>
 <dialog id="image-dialog"><form method="dialog"><button aria-label="关闭大图">×</button></form><img alt="图像放大预览"><p></p></dialog>
 <div class="toast" id="toast" role="status"></div>
-<script type="module" src="app.js"></script>
+<script type="module" src="app.ac3df8699473.js"></script>
 <script type="module" src="effect-preview.0d7562b56434.mjs"></script>
 <script src="pipeline-data.js"></script><script src="pipeline-integrated.js"></script></body></html>
