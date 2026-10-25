@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="zh-CN">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000"><meta name="description" content="Oliver Wu · TikTok AI 产品设计测试。自动化管线、笑容互动与图像美学评测。"><title>Oliver Wu — AI Design Test</title><link rel="icon" href="data:,"><link rel="preload" href="assets/fonts/ZaoZiGongFangYuanHeiTi-Regular-web.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="pipeline-integrated.css"><link rel="stylesheet" href="interaction-answer.50d11dbcb0b5.css"><link rel="stylesheet" href="answer-refinements.4a2f00d49dfe.css"></head>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#000000"><meta name="description" content="Oliver Wu · TikTok AI 产品设计测试。自动化管线、笑容互动与图像美学评测。"><title>Oliver Wu — AI Design Test</title><link rel="icon" href="data:,"><link rel="preload" href="assets/fonts/ZaoZiGongFangYuanHeiTi-Regular-web.woff2" as="font" type="font/woff2" crossorigin><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="editorial.css"><link rel="stylesheet" href="pipeline-integrated.css"><link rel="stylesheet" href="interaction-answer.50d11dbcb0b5.css"><link rel="stylesheet" href="answer-refinements.15326b21a3e7.css"></head>
 <body>
 <a class="skip" href="#main">跳到答卷</a>
 <aside class="sidebar">
@@ -146,10 +146,10 @@
    </div></section>
   </div>
   <div class="pa-section-heading pa-question-heading rating-subheading"><h3>复盘</h3></div>
-  <div class="pa-answer-prose interaction-review" aria-label="193字复盘，含核心纠偏提示词">
-   <p>AI把单测通过误当作浏览器可靠性保证：为切页恢复重构计时器，却因调用上下文错误卡死；又用轻量模型提速，造成识别抖动、迟钝和轮廓锯齿。</p>
+  <div class="pa-answer-prose interaction-review" aria-label="189字复盘，含核心纠偏提示词">
+   <p>AI把单测通过误当作浏览器可靠性保证：为优化切页恢复重构计时器，却因原生调用上下文错误卡死；又用轻量模型提速，造成识别迟钝和轮廓锯齿。</p>
    <p class="interaction-prompt-label">核心Prompt（据反馈提炼）：</p>
-   <blockquote>“先停改功能，记录启动步骤与异常，修正原生计时器的接收者；复测首开、切页返回及失败重试。恢复原模型、表情阈值和轮廓精度，禁止以降低识别质量提速；只做无损压缩、图集复用与推理渲染解耦，并逐项核验微笑、大笑、头发及手部碰撞。”</blockquote>
+   <blockquote>“先停改功能，记录启动步骤与异常，修正原生计时器接收者；复测首开、切页返回及重试。恢复原模型、表情阈值和轮廓精度，禁止降低识别质量提速；仅做无损压缩、图集复用与推理渲染解耦，逐项核验微笑、大笑、头发及手部碰撞。”</blockquote>
   </div>
  </section>
  <section id="part3" class="part-section rating-section">
@@ -177,6 +177,6 @@
 </main>
 <dialog id="image-dialog"><form method="dialog"><button aria-label="关闭大图">×</button></form><img alt="图像放大预览"><p></p></dialog>
 <div class="toast" id="toast" role="status"></div>
-<script type="module" src="app.5ee6244269d6.js"></script>
+<script type="module" src="app.7b153d819a3d.js"></script>
 <script type="module" src="effect-preview.0d7562b56434.mjs"></script>
 <script src="pipeline-data.js"></script><script src="pipeline-integrated.bd9f8f88b691.js"></script></body></html>

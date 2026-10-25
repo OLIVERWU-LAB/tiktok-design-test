@@ -17,3 +17,5 @@
 /* Agent overview: a small shared heading, followed by unboxed prose. */
 #part1 .pa-agent-heading{margin:28px 0 18px;font:20px/1.6 var(--title);color:#222}
 #part1 .pa-architecture-copy{padding:0;background:transparent;border:0;border-radius:0;box-shadow:none}
+
+#part3 .rank-info .image-id{display:block;font:11px/1.6 system-ui,sans-serif;letter-spacing:.3px;color:#686868}
