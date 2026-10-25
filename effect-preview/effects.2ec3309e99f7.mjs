@@ -1,11 +1,11 @@
-import {thinFlat,prioritizeFlat,markPortraitFlat,flatBirthBudget} from './flat-budget.8f940f8b8b12.mjs';
-import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.59fa9f580b7b.mjs';
+import {thinFlat,prioritizeFlat,markPortraitFlat,flatBirthBudget} from './flat-budget.a99ba5757c9e.mjs';
+import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.215c3c9e49b6.mjs';
 import{thinCinema,interleaveCinema}from'./particle-quality.87e837f1b8c3.mjs';
 import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.0705630f4b25.mjs';
 import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.7a7285039b04.mjs';
-import {contactRain,lineRainEntry,rainRate,portraitRainScale} from './rain-style.3d766a8d57e0.mjs';
+import {contactRain,lineRainEntry,slantedDropEntry,rainRate,portraitRainScale} from './rain-style.b33917715d69.mjs';
 import {handShell,handRing} from './handglow-particles.133cedb7d572.mjs';
-import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.04a7f6746462.mjs';
+import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.341888550775.mjs';
 import {withHeadCollider,resolveBurstPoint} from './head-collision.9b56dc516e10.mjs';
 import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.18da71f58a33.mjs';
 import {GIFT_COLORS,giftMaterial,giftSplash,giftLaunchOrigin,giftConfetti} from './gift-style.9d5f8a2e2357.mjs';
@@ -188,8 +188,8 @@ export class StickerWorld {
       const depth = .35 + this.random() * .65;
       const size = (digital ? (7.2 + Math.pow(this.random(), 1.25) * 6.8) * (.78+depth*.22) : this.style==='gift'?(18+this.random()*13)*2/3*.78:this.style==='flat'?5+this.random()**1.5*17:18+this.random()*13)*portraitRainScale(this.style,width,height);
       const life = height / 210 + 4;
-      const spawnRandom=this.random(),rainX=this.style==='gift'?(((this.rainSequence=(this.rainSequence||0)+1)*.61803398875+spawnRandom*.12)%1)*width:spawnRandom*width,entry=digital?lineRainEntry(width,height,depth,spawnRandom):null;
-      this.add({ type: 'drop', x: entry?.x??rainX, y: prefill-->0?this.random()*height*.88:(entry?.y??-45), vx: digital?entry.vx:this.style==='flat'?52+depth*45:-10+this.random()*20, vy: digital ? entry.vy : 360 + this.random() * 180, gravity:digital?620:this.style==='gift'?500:this.style==='flat'?470:65, size, life, maxLife: life, variant: Math.floor(this.random() * 5), angle: this.style==='flat'?-.23:0, spin: 0, touched: 0, generation: 0, depth, rainTone:Math.floor(this.random()*5),rainVariant:this.random()<.10?'hollow':this.random()<.16?'soft':'solid',dropShape:Math.floor(this.random()*3),rainLength:digital?26+depth*44:0, volume: size ** 3 });
+      const spawnRandom=this.random(),rainX=this.style==='gift'?(((this.rainSequence=(this.rainSequence||0)+1)*.61803398875+spawnRandom*.12)%1)*width:spawnRandom*width,dropVX=52+depth*45,dropVY=360+this.random()*180,entry=digital?lineRainEntry(width,height,depth,spawnRandom):this.style==='gift'?slantedDropEntry(width,height,dropVX,dropVY,rainX/width):null;
+      this.add({ type: 'drop', x: this.style==='gift'&&prefill>0?rainX:entry?.x??rainX, y: prefill-->0?this.random()*height*.88:(entry?.y??-45), vx: digital?entry.vx:['flat','gift'].includes(this.style)?dropVX:-10+this.random()*20, vy: digital ? entry.vy : dropVY, gravity:digital?620:this.style==='gift'?500:this.style==='flat'?470:65, size, life, maxLife: life, variant: Math.floor(this.random() * 5), angle: ['flat','gift'].includes(this.style)?-.23:0, spin: 0, touched: 0, generation: 0, depth, rainTone:Math.floor(this.random()*5),rainVariant:this.random()<.10?'hollow':this.random()<.16?'soft':'solid',dropShape:Math.floor(this.random()*3),rainLength:digital?26+depth*44:0, volume: size ** 3 });
     }
   }
   split(parent) {

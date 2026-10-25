@@ -1,7 +1,7 @@
 import {planBurst} from './pyro.80ba79a7b8c4.mjs';
-import {fitFlatViewport} from './flat-budget.8f940f8b8b12.mjs';
+import {fitFlatViewport} from './flat-budget.a99ba5757c9e.mjs';
 import {flatLaunchBusy,flatLaunchGap} from './live-playback.fac620d1df32.mjs';
-import {flatViewportScale} from './flat-placement.59fa9f580b7b.mjs';
+import {flatViewportScale} from './flat-placement.215c3c9e49b6.mjs';
 
 // The camera experience and answer previews use the same launch policy. Locks
 // change the expression input, never the show cadence or physical time scale.
