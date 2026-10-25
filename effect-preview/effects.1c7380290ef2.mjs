@@ -1,5 +1,5 @@
-import {thinFlat,prioritizeFlat,markPortraitFlat} from './flat-budget.af215da67170.mjs';
-import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.6c1b0abe4196.mjs';
+import {thinFlat,prioritizeFlat,markPortraitFlat,flatBirthBudget} from './flat-budget.8f940f8b8b12.mjs';
+import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.59fa9f580b7b.mjs';
 import{thinCinema,interleaveCinema}from'./particle-quality.87e837f1b8c3.mjs';
 import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.0705630f4b25.mjs';
 import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.7a7285039b04.mjs';
@@ -165,10 +165,10 @@ export class StickerWorld {
     // Remove expired slots, never opaque particles, before admitting a new cohort.
     this.particles=this.particles.filter(p=>{if(p.life>0)return true;this.keepTrail(p);return false;});
     if(this.style==='flat')particles=thinFlat(particles);
-    const budget=Math.min(particles.length,Math.max(1,Math.floor(this.limit*share))),major=particles.filter(p=>!p.cinemaDust),dust=particles.filter(p=>p.cinemaDust),sample=(arr,n)=>Array.from({length:n},(_,i)=>arr[Math.floor(i*arr.length/n)]);
+    const budget=Math.min(particles.length,Math.max(1,(this.style==='flat'?flatBirthBudget(particles,this.limit,share):Math.floor(this.limit*share)))),major=particles.filter(p=>!p.cinemaDust),dust=particles.filter(p=>p.cinemaDust),sample=(arr,n)=>Array.from({length:n},(_,i)=>arr[Math.floor(i*arr.length/n)]);
     let picked=(this.style==='flat'?prioritizeFlat(particles,budget):this.style==='cinema'?thinCinema(particles,budget):null)||(major.length>budget?sample(major,budget):[...major,...sample(dust,Math.min(dust.length,budget-major.length))]);
     const room=Math.max(0,this.limit-this.particles.length);if(this.style==='cinema'&&room<picked.length)picked=interleaveCinema(picked);const flatEmitters=this.style==='flat'?picked.filter(p=>p.flatEmitAt!=null):[];
-    const immediate=this.style==='flat'&&room<picked.length?(flatEmitters.length>room?flatEmitters.slice(0,room):prioritizeFlat(picked,room)):picked.slice(0,room),waiting=this.style==='flat'?flatEmitters.filter(p=>!immediate.includes(p)):picked.slice(room);
+    const immediate=this.style==='flat'&&room<picked.length?(flatEmitters.length>room?flatEmitters.slice(0,room):prioritizeFlat(picked,room)):picked.slice(0,room),waiting=this.style==='flat'?picked.filter(p=>!immediate.includes(p)&&(p.flatEmitAt!=null||(!p.flatFine&&p.flatRole!=='dust'))).sort((a,b)=>(a.flatRole==='ring'?0:a.flatEmitAt!=null?1:2)-(b.flatRole==='ring'?0:b.flatEmitAt!=null?1:2)):picked.slice(room);
     // Bound deferred births too. Excess new detail is thinned before it becomes visible.
     this.pendingParticles.push(...waiting.slice(0,Math.max(0,this.limit-this.pendingParticles.length)));
     this.makeRoom(this.pendingParticles.length+immediate.length);return immediate;
