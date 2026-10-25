@@ -3,7 +3,7 @@ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 // Keep the enlarged thumbnail out of the current row and its text column.
 export function hoverImagePlacement(image,row,viewport){
  const inset=16,gap=12,padding=8;
- const factor=Math.min(2,(viewport.width-inset*2-padding*2)/image.width,(viewport.height-inset*2-padding*2)/image.height);
+ const factor=Math.min(4,(viewport.width-inset*2-padding*2)/image.width,(viewport.height-inset*2-padding*2)/image.height);
  const width=image.width*factor+padding*2,height=image.height*factor+padding*2;
  const above=row.top-gap-height,below=row.bottom+gap;
  return {width,height,left:clamp((image.left+image.right-width)/2,inset,Math.max(inset,viewport.width-width-inset)),

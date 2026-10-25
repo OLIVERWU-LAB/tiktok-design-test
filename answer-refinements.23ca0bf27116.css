@@ -13,3 +13,8 @@
 #part1 .pa-safety-config .pa-trigger-scope{flex:none;margin:0;padding:3px 7px;font-size:11px;line-height:1.5}
 #part1 .pa-safety-config input{width:64px;flex:0 0 64px}
 @media(max-width:650px){#part3 .rank-score .expand-label{gap:4px;padding:6px;margin-right:-6px}}
+
+/* Large, quiet ordinals are clipped by each card and sit behind its content. */
+#part1 .pa-agent-grid .pa-card-body{position:relative;isolation:isolate;overflow:hidden}
+#part1 .pa-agent-grid .pa-card-body>:not(.pa-agent-ordinal){position:relative;z-index:1}
+#part1 .pa-agent-grid .pa-card-body .pa-agent-ordinal{position:absolute;right:-.04em;bottom:-.18em;z-index:0;font:400 clamp(180px,18vw,236px)/.80 var(--title);letter-spacing:-.04em;color:#1034ce;opacity:.08;pointer-events:none;user-select:none}
