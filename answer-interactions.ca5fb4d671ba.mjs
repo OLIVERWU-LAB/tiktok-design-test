@@ -2,11 +2,11 @@ const clamp=(value,min,max)=>Math.max(min,Math.min(max,value));
 
 // Keep the enlarged thumbnail out of the current row and its text column.
 export function hoverImagePlacement(image,row,viewport){
- const inset=16,gap=12,padding=8;
- const factor=Math.min(4,(viewport.width-inset*2-padding*2)/image.width,(viewport.height-inset*2-padding*2)/image.height);
+ const inset=16,gap=12,padding=8,leftInset=Math.max(inset,viewport.contentLeft??inset);
+ const factor=Math.min(3,(viewport.width-leftInset-inset-padding*2)/image.width,(viewport.height-inset*2-padding*2)/image.height);
  const width=image.width*factor+padding*2,height=image.height*factor+padding*2;
  const above=row.top-gap-height,below=row.bottom+gap;
- return {width,height,left:clamp((image.left+image.right-width)/2,inset,Math.max(inset,viewport.width-width-inset)),
+ return {width,height,left:clamp((image.left+image.right-width)/2,leftInset,Math.max(leftInset,viewport.width-width-inset)),
   top:clamp(above>=inset?above:below+height<=viewport.height-inset?below:above,inset,Math.max(inset,viewport.height-height-inset))};
 }
 
@@ -29,7 +29,9 @@ export function installAnswerInteractions({document,window,root}){
   const row=button.closest('.ranking'),thumbnail=button.querySelector('img');
   if(!row||row.open||row.dataset.expanded==='true'||!thumbnail)return hideImagePreview();
   const bounds=button.getBoundingClientRect();if(!bounds.width||!bounds.height)return;
-  const layout=hoverImagePlacement(bounds,row.getBoundingClientRect(),{width:window.innerWidth,height:window.innerHeight});
+  const sidebar=document.querySelector?.('.sidebar')?.getBoundingClientRect(),verticalSidebar=sidebar&&sidebar.left<=0&&sidebar.width<window.innerWidth*.5&&sidebar.height>window.innerHeight*.5;
+  const contentLeft=verticalSidebar?sidebar.right+16:16;
+  const layout=hoverImagePlacement(bounds,row.getBoundingClientRect(),{width:window.innerWidth,height:window.innerHeight,contentLeft});
   const source=thumbnail.currentSrc||thumbnail.src;
   if(image.src!==source)image.src=source;image.alt=thumbnail.alt;
   for(const field of ['width','height','left','top'])popup.style[field]=layout[field]+'px';

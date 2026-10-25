@@ -1,4 +1,4 @@
-import {installAnswerInteractions,handleRankMediaClick} from './answer-interactions.48efba45aea3.mjs';
+import {installAnswerInteractions,handleRankMediaClick} from './answer-interactions.ca5fb4d671ba.mjs';
 const $=s=>document.querySelector(s);
 const fields=['composition','light','content','structure','oiliness'];
 const labels={composition:'构图',light:'光影色彩关系',content:'内容意味与艺术表达',structure:'结构错误',oiliness:'画面质感缺陷'};
