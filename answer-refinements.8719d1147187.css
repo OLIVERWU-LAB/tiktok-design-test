@@ -4,7 +4,7 @@
 #part3 .ranking>summary:focus-visible .expand-label{background:#eaf0ff;color:#1034ce}
 .rank-hover-preview{position:fixed;z-index:85;box-sizing:border-box;padding:8px;border-radius:12px;background:#fff;box-shadow:0 12px 42px #18223a26,0 2px 8px #18223a12;pointer-events:none}
 .rank-hover-preview img{display:block;width:100%;height:100%;object-fit:contain;border-radius:6px;background:#f6f6f6}
-@media(hover:hover) and (pointer:fine){#part3 .ranking:not([data-expanded="true"]) .rank-media{cursor:default}#part3 .ranking:not([data-expanded="true"]) .image-enlarge-overlay{display:none}}
+@media(hover:hover) and (pointer:fine){#part3 .ranking:not([data-expanded="true"]) .rank-media{cursor:pointer;transform-origin:center;transition:transform .18s ease,box-shadow .18s ease}#part3 .ranking:not([data-expanded="true"]) .image-enlarge-overlay{display:none}}
 
 @media(prefers-reduced-motion:reduce){#part3 .rank-score .expand-label{transition:none}}
 
@@ -29,3 +29,7 @@
 .assignment-subheading{margin:44px 0 22px}.assignment-subheading h4{font:22px/1.5 var(--title);margin:0;color:#18191c}
 .review-question{margin:-12px 0 24px}
 @media(max-width:650px){.home-section .test-category{font-size:21px}.assignment-brief,.pa-question-heading>.assignment-question,.review-question{font-size:13px}.part-section>.section-title{font-size:28px}.assignment-subheading h4{font-size:20px}}
+
+/* Subtle thumbnail feedback accompanies the separate full-frame preview. */
+@media(hover:hover) and (pointer:fine){#part3 .ranking:not([data-expanded="true"]) .rank-media:is(:hover,:focus-visible){transform:translateY(-1px) scale(1.03);box-shadow:0 5px 14px #00000029,0 1px 3px #00000014}}
+@media(prefers-reduced-motion:reduce){#part3 .ranking:not([data-expanded="true"]) .rank-media{transition:none}#part3 .ranking:not([data-expanded="true"]) .rank-media:is(:hover,:focus-visible){transform:none}}
