@@ -1,11 +1,11 @@
-import {thinFlat,prioritizeFlat,markPortraitFlat,flatBirthBudget} from './flat-budget.2a961b5f374a.mjs';
-import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.75e51385dfa8.mjs';
+import {thinFlat,prioritizeFlat,markPortraitFlat,flatBirthBudget} from './flat-budget.1c8748d43a6c.mjs';
+import{flatRandom,flatFlowerSites,flatSitesClear}from'./flat-placement.9ebb9b109665.mjs';
 import{thinCinema,interleaveCinema}from'./particle-quality.87e837f1b8c3.mjs';
 import {REFINED_CINEMA_PATTERN,refinedCinemaShell,refinedCinemaChildren} from './cinema-refined-particles.0705630f4b25.mjs';
 import {ORIGINAL_CINEMA_PATTERN,originalCinemaShell,originalCinemaChildren} from './cinema-original-particles.7a7285039b04.mjs';
 import {contactRain,lineRainEntry,slantedDropEntry,rainRate,portraitRainScale} from './rain-style.b33917715d69.mjs';
 import {handShell,handRing} from './handglow-particles.133cedb7d572.mjs';
-import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.4b713f4ff2c1.mjs';
+import {FLAT_PATTERN,FLAT_PATTERNS,ACTIVE_FLAT_PATTERNS,FLAT_PALETTE,flatShell,flatChildren,flatOpening,flatAfterglints} from './flat-fireworks.dbe7627a08eb.mjs';
 import {withHeadCollider,resolveBurstPoint} from './head-collision.9b56dc516e10.mjs';
 import {GIFT_PATTERNS,CINEMA_PATTERNS,GIFT_PALETTE,GIFT_BEAD_COLORS,giftShell,giftBeadChildren,cinemaShell,cinemaRingChildren,referencePattern} from './reference-bursts.18da71f58a33.mjs';
 import {GIFT_COLORS,giftMaterial,giftSplash,giftLaunchOrigin,giftConfetti} from './gift-style.9d5f8a2e2357.mjs';
@@ -359,7 +359,7 @@ export class StickerWorld {
         if(p.trailClock>=(this.trailStep||.016)){p.trailClock%=(this.trailStep||.016);p.trail.unshift({x:p.x,y:p.y,age:p.maxLife-p.life});}
         const age=p.maxLife-p.life;p.trail=p.trail.filter(q=>age-q.age<=(p.trailAge??.28)).slice(0,p.tailLength);
       }
-      if(p.outerGlints&&!p.outerSpent&&p.life<=.32){p.outerSpent=true;if(p.retireRemaining==null){secondary.push(...flatAfterglints(p,this.random));this.event('glitter',{x:clamp(p.x/width),stage:3});}}
+      if(p.outerGlints&&!p.outerSpent&&p.life<=.32){p.outerSpent=true;if(p.retireRemaining==null&&(!p.flatFx||this.particles.length+secondary.length<this.limit*.80)){secondary.push(...flatAfterglints(p,this.random));this.event('glitter',{x:clamp(p.x/width),stage:3});}}
       if (p.type === 'drop' && !p.giftSplash && !p.rainRipple && p.life > 0 && p.y >= this.water.surface(p.x, width, height) - 2) { if(!p.generation&&['cinema','glow','flat','gift'].includes(this.style))additions.push({...p,y:this.water.surface(p.x,width,height)-3,hitNormal:{x:0,y:-1},hitRegion:'water'});this.water.impact(p.x, width, ['cinema','glow'].includes(this.style) ? Math.cbrt(p.volume ?? p.size ** 3) * 3.2 : p.size); p.life = 0; }
     }
     for (const p of additions) this.split(p);

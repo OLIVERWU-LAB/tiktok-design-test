@@ -8,7 +8,7 @@ if(root){
   progress:el.querySelector('[data-preview-progress]'),label:el.querySelector('img').alt,
  }));
  let frame=0,library;
- const module=()=>library??=import('./effect-preview/scene.06fdb09d435a.mjs');
+ const module=()=>library??=import('./effect-preview/scene.471535382bb5.mjs');
  const active=c=>c.visible&&c.scene&&!c.failed&&!c.paused&&!c.scrubbing&&!c.pendingSeek;
  const runnable=()=>!document.hidden&&cards.some(active);
  function schedule(){if(!frame&&runnable())frame=requestAnimationFrame(tick);}

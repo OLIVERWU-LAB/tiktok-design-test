@@ -1,7 +1,7 @@
 import {planBurst} from './pyro.80ba79a7b8c4.mjs';
-import {fitFlatViewport} from './flat-budget.2a961b5f374a.mjs';
+import {fitFlatViewport} from './flat-budget.1c8748d43a6c.mjs';
 import {flatLaunchBusy,flatLaunchGap} from './live-playback.fac620d1df32.mjs';
-import {flatViewportScale} from './flat-placement.75e51385dfa8.mjs';
+import {flatViewportScale,widenFlatBouquet} from './flat-placement.9ebb9b109665.mjs';
 
 // The camera experience and answer previews use the same launch policy. Locks
 // change the expression input, never the show cadence or physical time scale.
@@ -13,7 +13,7 @@ export function planLiveFirework(world,width,height,head,index,random=Math.rando
  const edge=Math.max(24,width*.10),launchX=direction<0?edge:width-edge;
  plan.launchX=launchX;plan.requestedSide=requestedSide;
  if(world.style==='flat')plan.flatFixedScale=flatViewportScale(width,height);
- const layout=world.style==='flat'?fitFlatViewport(plan,width,height,head):plan;
+ const layout=world.style==='flat'?widenFlatBouquet(fitFlatViewport(plan,width,height,head),width,height,head):plan;
  if(layout){
   // Align the ascent with its selected apex; never shoot across the screen.
   const drift=Math.min(width*.16,(height+22-layout.y)*.25);
